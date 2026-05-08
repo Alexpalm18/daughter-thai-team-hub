@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Daughter Thai — Food Bible</title>
+<style>
+*{-webkit-box-sizing:border-box;box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;background:#f5f4f0;color:#1a1a18;min-height:100vh;-webkit-text-size-adjust:100%}
+header{background:#fff;border-bottom:1px solid #e0ddd8;padding:13px 16px;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:space-between;justify-content:space-between;position:-webkit-sticky;position:sticky;top:0;z-index:20}
+.logo{font-size:17px;font-weight:700;letter-spacing:-.2px}
+.logo span{color:#c0392b}
+.sub{font-size:11px;color:#999;margin-top:1px}
+.container{max-width:820px;margin:0 auto;padding:0 16px 40px 16px}
+
+/* ── NAV ── */
+.nav{display:-webkit-flex;display:flex;background:#f0ede8;border-radius:10px;padding:3px;gap:2px;margin:14px 0 4px 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nav-btn{-webkit-flex-shrink:0;flex-shrink:0;padding:8px 11px;border-radius:8px;border:none;background:transparent;font-size:12px;font-weight:600;color:#888;cursor:pointer;font-family:inherit;-webkit-appearance:none;appearance:none;white-space:nowrap}
+.nav-btn.on{background:#fff;color:#1a1a18;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+/* ── SEARCH ── */
+.search-wrap{position:relative;margin:12px 0 16px 0}
+.search-input{width:100%;padding:10px 14px 10px 36px;border-radius:10px;border:1px solid #e0ddd8;background:#fff;font-size:13px;font-family:inherit;color:#1a1a18;-webkit-appearance:none;appearance:none;outline:none}
+.search-icon{position:absolute;left:11px;top:50%;-webkit-transform:translateY(-50%);transform:translateY(-50%);font-size:14px;color:#bbb;pointer-events:none}
+
+/* ── SECTION ── */
+.sec-label{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#bbb;margin:16px 0 10px 0}
+
+/* ── DISH CARDS ── */
+.grid{display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:9px}
+.dc{background:#fff;border:1px solid #e8e5e0;border-radius:11px;padding:13px;cursor:pointer;-webkit-flex:0 0 calc(50% - 5px);flex:0 0 calc(50% - 5px);display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;min-height:90px}
+@media(min-width:480px){.dc{-webkit-flex:0 0 calc(33.33% - 6px);flex:0 0 calc(33.33% - 6px)}}
+@media(min-width:680px){.dc{-webkit-flex:0 0 calc(25% - 7px);flex:0 0 calc(25% - 7px)}}
+.dc-front,.dc-back{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;gap:5px;height:100%}
+.dc-cat{font-size:10px;padding:2px 7px;border-radius:99px;display:inline-block;font-weight:700;width:-webkit-fit-content;width:fit-content}
+.dc-name{font-size:13px;font-weight:700;color:#1a1a18;line-height:1.3}
+.dc-hint{font-size:10px;color:#ccc;margin-top:auto;padding-top:6px}
+.dc-tag-row{display:-webkit-flex;display:flex;gap:4px;-webkit-flex-wrap:wrap;flex-wrap:wrap;margin-top:2px}
+.tag{font-size:10px;padding:2px 6px;border-radius:99px;font-weight:700}
+.tag-gf{background:#e1f5ee;color:#04342c}
+.tag-gfo{background:#d4f0e4;color:#04342c}
+.tag-v{background:#eaf3de;color:#173404}
+.tag-vo{background:#d8eecc;color:#173404}
+.tag-pfo{background:#fff3e0;color:#6b3a00}
+.dc-ingr-box{background:#faf9f6;border:1px solid #ede9e3;border-radius:7px;padding:8px 10px;font-size:11px;color:#444;line-height:1.7;white-space:pre-line}
+.dc-divider{border:none;border-top:1px solid #f0ede8;margin:6px 0}
+.dc-method{font-size:11px;color:#555;line-height:1.6}
+.dc-server-note{font-size:11px;padding:6px 9px;border-radius:7px;background:#fff8e8;color:#6b4400;font-weight:500;line-height:1.5;margin-top:3px;border-left:2px solid #f0a500}
+.al-row{display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:4px;margin-top:4px}
+.al{font-size:10px;padding:2px 7px;border-radius:99px;font-weight:700}
+.al-wheat{background:#faeeda;color:#633806}
+.al-soy{background:#e6f1fb;color:#042c53}
+.al-peanut{background:#fde8e8;color:#6b1212}
+.al-shellfish{background:#fbeaf0;color:#4b1528}
+.al-egg{background:#faf9e8;color:#4b3a00}
+.al-sesame{background:#f5ece8;color:#4a1b0c}
+.al-dairy{background:#f0f0ff;color:#26215c}
+.al-gluten{background:#faeeda;color:#633806}
+.al-fish{background:#e6f1fb;color:#042c53}
+.al-mushroom{background:#f1efe8;color:#2c2c2a}
+.al-oyster{background:#fbeaf0;color:#4b1528}
+.al-crab{background:#fde8e8;color:#6b1212}
+.dc-choices{font-size:11px;color:#555;line-height:1.7;margin-top:2px}
+.dc-flip{font-size:10px;color:#ccc;margin-top:auto;padding-top:6px;text-align:right}
+.dc-pieces{font-size:11px;color:#888}
+
+/* ── ALLERGEN TAB ── */
+.legend-row{display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.legend-item{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:5px;font-size:11px;color:#555;background:#fff;border:1px solid #e8e5e0;border-radius:8px;padding:5px 10px}
+.al-section-header{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:8px;margin:18px 0 10px 0;padding-bottom:8px;border-bottom:1px solid #e8e5e0}
+.al-section-title{font-size:14px;font-weight:700;color:#1a1a18}
+.al-section-count{font-size:11px;color:#bbb}
+.dish-row{display:-webkit-flex;display:flex;-webkit-align-items:flex-start;align-items:flex-start;-webkit-justify-content:space-between;justify-content:space-between;padding:9px 13px;background:#fff;border:1px solid #e8e5e0;border-radius:9px;margin-bottom:6px;gap:10px}
+.dish-row-name{font-size:12px;font-weight:600;color:#1a1a18;-webkit-flex:1;flex:1;line-height:1.4}
+.dish-row-al{font-size:10px;color:#888;line-height:1.6;text-align:right;-webkit-flex-shrink:0;flex-shrink:0;max-width:55%}
+.dish-tags{display:-webkit-flex;display:flex;gap:3px;-webkit-flex-wrap:wrap;flex-wrap:wrap;margin-top:3px}
+
+/* ── SAUCE TAB ── */
+.sauce-card{background:#fff;border:1px solid #e8e5e0;border-radius:11px;margin-bottom:9px;overflow:hidden}
+.sauce-header{padding:12px 15px;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:space-between;justify-content:space-between;cursor:pointer}
+.sauce-name{font-size:13px;font-weight:700;color:#1a1a18}
+.sauce-arrow{font-size:12px;color:#ccc;-webkit-transition:transform .2s;transition:transform .2s}
+.sauce-body{display:none;border-top:1px solid #f0ede8;padding:10px 15px;font-size:12px;color:#555;line-height:1.7}
+
+.no-results{text-align:center;padding:40px 20px;color:#bbb;font-size:14px}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="logo">Daughter <span>Thai</span></div>
+    <div class="sub">Food Bible — Staff Reference</div>
+  </div>
+  <div style="font-size:11px;color:#bbb">by Alex Piyapanee</div>
+</header>
+
+<div class="container">
+  <div class="nav" id="main-nav">
+    <button class="nav-btn on" onclick="showTab('all',this)">All</button>
+    <button class="nav-btn" onclick="showTab('appetizer',this)">Appetizer</button>
+    <button class="nav-btn" onclick="showTab('soup',this)">Soup</button>
+    <button class="nav-btn" onclick="showTab('salad',this)">Salad</button>
+    <button class="nav-btn" onclick="showTab('special',this)">Special</button>
+    <button class="nav-btn" onclick="showTab('noodle',this)">Noodle</button>
+    <button class="nav-btn" onclick="showTab('curry',this)">Curry</button>
+    <button class="nav-btn" onclick="showTab('street',this)">Street Food</button>
+    <button class="nav-btn" onclick="showTab('dessert',this)">Dessert</button>
+    <button class="nav-btn" onclick="showTab('allergen',this)">&#9888; Allergens</button>
+    <button class="nav-btn" onclick="showTab('sauces',this)">Sauces</button>
+  </div>
+
+  <div class="search-wrap">
+    <span class="search-icon">&#128269;</span>
+    <input class="search-input" id="search-input" type="search" placeholder="Search dish, allergen, ingredient…" oninput="doSearch(this.value)">
+  </div>
+
+  <div id="search-results" style="display:none"></div>
+  <div id="tab-content"></div>
+</div>
+
+<script>
+var CHOICES="Choice of protein:\nVeg / Tofu (base)\nChicken / Pork / Minced Pork +$1.50\nWagyu Beef +$4  ·  Fried Egg +$2.50\nCrispy Pork Belly +$4.50\nPrawns +$5  ·  Combo Seafood +$6";
+
+var CAT={
+  appetizer:{label:"Appetizer",bg:"#fbeaf0",tc:"#4b1528"},
+  soup:{label:"Soup",bg:"#e6f1fb",tc:"#042c53"},
+  salad:{label:"Salad",bg:"#e1f5ee",tc:"#04342c"},
+  special:{label:"Special",bg:"#faeeda",tc:"#633806"},
+  noodle:{label:"Noodle Soup",bg:"#eeedfe",tc:"#26215c"},
+  curry:{label:"Curry",bg:"#fde8e8",tc:"#6b1212"},
+  street:{label:"Street Food",bg:"#f5c4b3",tc:"#4a1b0c"},
+  dessert:{label:"Dessert",bg:"#f0f0ff",tc:"#26215c"}
+};
+
+/* tags: gf=fully GF, gfo=GF option, v=vegan, vo=vegan option, pfo=peanut-free option */
+var DISHES=[
+  /* APPETIZERS */
+  {id:"eggroll",cat:"appetizer",name:"Daughter Egg Rolls",tags:["soy"],
+   pieces:"8 pieces per order",
+   ingr:"Vegetable oil · egg roll skin · silver noodles · carrot · taro · cabbage · peanut sauce",
+   sauces_served:"Peanut sauce + Mae Ploy sauce",
+   method:"4 egg rolls cut into 8 pieces. Served on top of mixed peanut sauce and Mae Ploy sauce, topped with micro green and peanut.",
+   allergens:["wheat","soy","egg","mushroom"]},
+  {id:"samosa",cat:"appetizer",name:"Samosa",tags:["v"],
+   pieces:"4 pieces per order",
+   ingr:"Vegetable oil · red Norland potato · onion · carrot · pastry skin · fried onion · crispy potato",
+   sauces_served:"Yellow curry (topped with crispy shallots, green onion, cilantro)",
+   method:"On metal tray, thin layer of crispy potato. 4 samosas placed nicely with a small bowl of yellow curry on the side.",
+   allergens:["wheat","soy"]},
+  {id:"ahi",cat:"appetizer",name:"Ahi Scoops",tags:["gfo"],
+   pieces:"4 pieces per order · guest can add 1 piece for $4",
+   ingr:"Red tuna · sesame · cucumber · seaweed salad · crispy potato · lemongrass · chili lime vinaigrette · dill",
+   sauces_served:"Thai seafood sauce",
+   method:"3-layer bowl: bottom = crispy potato + cucumber, middle = seaweed salad, top = ahi tuna. Topped with lemongrass, Sriracha, seafood sauce, and dill.",
+   server_note:"GF option: omit seaweed salad.",
+   allergens:["gluten","sesame","fish","soy"]},
+  {id:"fishcake",cat:"appetizer",name:"Thai Fish Cakes",tags:["pfo"],
+   pieces:"4 pieces per order",
+   ingr:"White fish paste · red curry paste · kaffir lime leaves · green bean · peanut chili sauce · tapioca flour · sugar · salt · crushed chili · crispy shallot",
+   sauces_served:"Cucumber salad + Mae Ploy sauce",
+   method:"4 fish cakes placed on metal tray, topped with micro green. Cucumber salad served alongside.",
+   allergens:["gluten","peanut"]},
+  {id:"mieng",cat:"appetizer",name:"Mieng Kum Kung",tags:[],
+   pieces:"3 pieces per order · guest can add 1 piece for $5.50",
+   ingr:"Tiger prawns · panko · flour · red chili · leafy green · lime · ginger · onion · roasted coconut · peanuts · tamarind sauce · sesame seed",
+   sauces_served:"Tamarind sauce + Mae Ploy sauce",
+   method:"3 Asian broccoli leaves on bottom. Topped with Mieng Kum mixture and fried shrimp. Topped with Mae Ploy and micro green.",
+   allergens:["wheat","soy","peanut","sesame","shellfish"]},
+  {id:"wings",cat:"appetizer",name:"Chicken Wings",tags:[],
+   pieces:"5 pieces per order",
+   ingr:"Chicken wings · lemongrass · crispy basil · chili plum sauce",
+   sauces_served:"Sauce Taco + Mae Ploy sauce",
+   method:"5 wings on banana leaves on metal tray, topped with crispy basil.",
+   allergens:["fish"]},
+  {id:"neuarolls",cat:"appetizer",name:"Neua Num Tok Rolls",tags:[],
+   pieces:"4 pieces per order · guest can add 1 piece for $4.75",
+   ingr:"Snake River Farm Wagyu flank steak · mint · cilantro · cucumber · cilantro lime vinaigrette",
+   method:"Grilled sliced beef rolled with mint, cucumber, cilantro. Held with bamboo skewer. Placed in bowl with cilantro lime vinaigrette on bottom, served on banana leaves.",
+   allergens:["wheat","soy","oyster","mushroom"]},
+  {id:"taco",cat:"appetizer",name:"Daughter Thai Taco",tags:[],
+   pieces:"2 pieces per order",
+   ingr:"Chicken · flour · taco sauce · spring mixed greens · carrot · cucumber · roti",
+   sauces_served:"Sauce Taco",
+   method:"Roti cut in half, placed on taco holder. Filled with spring mixed green, carrot, cucumber, chicken. Served on metal tray.",
+   allergens:["fish"]},
+  /* SOUP */
+  {id:"tomyum",cat:"soup",name:"Tom Yum",tags:["gf"],
+   pieces:"",
+   ingr:"Lemongrass · galangal · kaffir lime leaves · mushroom · tomato · Thai chili · lime juice · fish sauce · sugar · MSG",
+   method:"Served in bowl, topped with cilantro and green onion.",
+   allergens:["fish","shellfish","mushroom"]},
+  {id:"tomkha",cat:"soup",name:"Tom Kha",tags:["gf"],
+   pieces:"Small 16oz (1 person) · Large 32oz (3–4 people)",
+   ingr:"Coconut milk · lemongrass · galangal · kaffir lime leaves · mushroom · tomato · Thai chili · lime juice · fish sauce · sugar · MSG",
+   method:"Small: served in a bowl. Large: served on hot pot with methanol alcohol flame. Both topped with cilantro and green onion.",
+   server_note:"Server must serve the soup tableside when guest orders Large Tom Kha.",
+   allergens:["fish","mushroom"]},
+  {id:"tomkha",cat:"soup",name:"Tom Kha",tags:["gf"],
+   pieces:"Small 16oz (1 person) · Large 32oz (3–4 people)",
+   ingr:"Coconut milk · mushroom · tomato · cabbage · galangal · kaffir lime leaves · lemongrass · cilantro · green onion · sugar · lime juice · fish sauce",
+   method:"Small: served in a bowl. Large: served on hot pot with methanol alcohol flame. Both topped with cilantro and green onion.",
+   server_note:"Server must serve the soup tableside when guest orders Large Tom Kha.",
+   allergens:[]},
+  /* SALADS */
+  {id:"papaya",cat:"salad",name:"Papaya Salad",tags:["gf"],
+   pieces:"",
+   ingr:"Green papaya · garlic · peanuts · fresh chili · cherry tomato · Thai long beans",
+   sauces_served:"Som Tum sauce. Upgrades: +$2 salted crab or fermented fish · +$5 grilled tiger prawns",
+   method:"Served on metal tray, topped with micro green and carrot.",
+   server_note:"Must inform guest: SPICY (medium) and contains shellfish. If guest doesn't want spicy, sauce on the side only — do not proactively offer this, encourage them to try something else.",
+   allergens:["fish","crab"]},
+  {id:"quinoa",cat:"salad",name:"Quinoa Salad",tags:[],
+   pieces:"",
+   ingr:"Roasted coconut · brown rice · dry chili · crispy shallots · lemongrass · ginger · peanuts · kaffir lime leaves · tamarind dressing · sesame seeds · red onion · crispy rice · quinoa · carrot · mixed greens",
+   method:"Served on metal tray, topped with micro green, crispy potato, fried chili, and coconut milk.",
+   server_note:"Must inform guest this item contains peanut. Mix the salad for the customer — use good time management.",
+   allergens:["peanut","shellfish","soy","wheat","sesame"]},
+  {id:"ricesalad",cat:"salad",name:"Nam Khao Tod",tags:["pfo"],
+   pieces:"",
+   ingr:"Thai fermented pork sausage · red curry · rice · egg · green onion · kaffir lime leaves · cilantro · fried garlic · fried onion · ginger · chili · red onion",
+   sauces_served:"Salad sauce. Served with fresh mix seasonal veggie, ginger, cucumber, peanuts.",
+   method:"Served on metal tray with mix seasonal veggie, peanut, fried chili, sliced lime, cucumber, and ginger.",
+   server_note:"Must explain how to eat: \"Wrap the lettuce with rice salad, a little ginger, basil, and peanut. Add fried chili if you like it spicy.\"",
+   allergens:["fish","egg","peanut"]},
+  /* SPECIALS */
+
+  {id:"kangpla",cat:"special",name:"Kang Tai Pla",tags:["gfo"],
+   pieces:"",
+   ingr:"Pickled fish · mackerel · turmeric · lemongrass · kabocha pumpkin · garlic · Thai eggplant · green bean · bamboo shoots · southern curry paste",
+   sauces_served:"Served with crispy pork belly, vermicelli noodle, fresh mix seasonal veggie.",
+   method:"Garlic oil on vermicelli noodle.",
+   server_note:"Explain how to eat: \"Put the curry on the noodles and enjoy with mix seasonal veggies on the side.\"",
+   allergens:["shellfish"]},
+  {id:"kangkua",cat:"special",name:"Kang Kua Prawns",tags:["gfo"],
+   pieces:"",
+   ingr:"Southern curry · turmeric · krachai · kaffir lime leaves · young coconut meat · young peppercorn · garlic · stir-fry sauce",
+   method:"Served on half fresh young coconut with coconut rice, cucumber salad, fresh mix seasonal veggie. Carrot on top of rice, coconut milk on top of curry.",
+   allergens:["wheat","soy","shellfish","oyster","mushroom"]},
+  {id:"tomyumfriedrice",cat:"special",name:"Tom Yum Fried Rice",tags:["gfo"],
+   pieces:"",
+   ingr:"Rice · egg · tom yum paste · lemongrass · kaffir lime leaves · mushroom · tomato · onion · cilantro · fish sauce",
+   method:"Topped with cilantro and green onion. Served with sliced lime and cucumber on the side.",
+   allergens:["mushroom","fish"]},
+  {id:"crabrice",cat:"special",name:"Crab Fried Rice",tags:["gf"],
+   pieces:"",
+   ingr:"Fresh Dungeness crab meat · rice · cage-free egg · yellow onion · tomato · cilantro · crab & shrimp paste · fish sauce · black pepper",
+   sauces_served:"Thai seafood sauce + chili paste. Served on banana leaves with bone broth and sliced lime.",
+   method:"Crab meat on top of rice on banana leaves in metal tray. Cilantro, carrot, black pepper on top. Bone broth bowl with crispy garlic, onion, green onion, cilantro, black pepper. Sliced lime on the side.",
+   allergens:["egg","shellfish","crab","fish","mushroom"]},
+  {id:"runjuan",cat:"special",name:"Run Juan Seafood Sizzling",tags:["gfo"],
+   pieces:"",
+   ingr:"Assorted seafood · curry paste · basil · onion · bell pepper · jalapeño · young peppercorn · lemongrass · kaffir lime leaves · krachai · flour",
+   method:"Served on cast iron pan with jasmine rice on the side. Carrot on top of rice, lime wedge on the side.",
+   server_note:"GF option: seafood will not be breaded or fried.",
+   allergens:["wheat","soy","oyster","shellfish","mushroom"]},
+  {id:"hatyai",cat:"special",name:"Hat Yai Fried Chicken",tags:[],
+   pieces:"",
+   ingr:"Mary's Organic Chicken Breast · turmeric · lemon · mushroom seasoning · flour · salt · MSG · red chili · fried shallots",
+   sauces_served:"Mae Ploy sauce + potato yellow curry. Served with roti, jasmine rice, cucumber salad.",
+   method:"All on metal tray: rice, chicken, cucumber salad, yellow curry, Mae Ploy. Roti on top of chicken with steak knife holder, topped with micro green and crispy shallots. Rice topped with carrot. Yellow curry topped with crispy shallots and green onion.",
+   allergens:["wheat","soy","mushroom"]},
+  {id:"kaigor",cat:"special",name:"Kai Gor Rhae",tags:["gfo"],
+   pieces:"",
+   ingr:"Mary's Organic Chicken Thigh · coconut milk · garlic · lemongrass · cilantro seed · fennel seed · tapioca powder · salt · black pepper · paprika · turmeric",
+   sauces_served:"Peanut sauce + Mae Ploy sauce. Served with cucumber salad and coconut rice.",
+   method:"Grilled chicken topped with house tamarind sauce, crispy garlic, crispy shallot, cilantro, and green onion. Served with coconut rice, cucumber salad, and mix of peanut sauce + Mae Ploy.",
+   server_note:"GF option: house tamarind sauce will NOT be put on top of the chicken.",
+   allergens:["shellfish","mushroom","peanut"]},
+  {id:"beefcurry",cat:"special",name:"Slow Cooked Beef Curry",tags:[],
+   pieces:"",
+   ingr:"Beef · green curry paste · Thai eggplant · bell pepper · basil · bamboo shoot · mixed veggie",
+   method:"Served with vermicelli noodle and fresh mix seasonal veggie. Garlic oil on vermicelli.",
+   server_note:"Explain how to eat: \"Put the curry on the noodles and enjoy with the mix seasonal veggies on the side.\"",
+   allergens:["wheat","soy","shellfish"]},
+  {id:"seua",cat:"special",name:"Seua Rhong Haii",tags:[],
+   pieces:"",
+   ingr:"Snake River Farm Wagyu Beef Flank Steak · stir-fry sauce · tamarind · broccolini · fried shallots",
+   sauces_served:"Roasted rice sauce + house tamarind sauce + dried chili + roasted rice. Served with sticky rice.",
+   method:"House tamarind sauce on top of beef with cilantro, crushed chili, and green onion.",
+   allergens:["wheat","soy","oyster","mushroom","shellfish"]},
+  {id:"panang",cat:"special",name:"Panang Neua",tags:[],
+   pieces:"",
+   ingr:"Bone-in beef short rib · Panang curry · coconut milk · broccolini · bell pepper · onion · fried basil",
+   method:"Beef rib in bowl with broccolini, bell pepper, onion on bottom. Topped with Panang curry and fried basil. Served with jasmine rice topped with carrot.",
+   allergens:["wheat","soy","mushroom"]},
+  /* NOODLE SOUP */
+  {id:"tofunoodle",cat:"noodle",name:"Tofu Noodle Soup",tags:["gf","v"],
+   pieces:"",
+   ingr:"Fresh rice noodles · mushroom broth · soft tofu · Asian broccoli · zucchini · carrots · bean sprouts · cilantro · celery · green onion",
+   method:"Topped with crispy shallots, cilantro, and green onion.",
+   allergens:["mushroom"]},
+  {id:"chickennoodle",cat:"noodle",name:"Chicken Noodle Soup",tags:["gf"],
+   pieces:"",
+   ingr:"Sliced organic chicken · chicken broth · fresh rice noodles · Asian broccoli · cilantro · bean sprouts · green onion · fried shallots · fried garlic",
+   method:"Topped with crispy garlic, crispy shallot, cilantro, and green onion.",
+   allergens:["mushroom"]},
+  {id:"beefnoodle",cat:"noodle",name:"24 Hour Beef Noodle Soup",tags:[],
+   pieces:"",
+   ingr:"Bone-in beef short rib · veal broth · Asian broccoli · basil · bean sprouts · egg noodles · cilantro · green onion · garlic",
+   method:"Topped with crispy garlic, crispy shallot, cilantro, and green onion.",
+   allergens:["wheat","soy","mushroom"]},
+  /* CURRY */
+  {id:"redcurry",cat:"curry",name:"Red Curry",tags:[],
+   pieces:"",
+   ingr:"Bell pepper · bamboo shoots · basil · red curry paste · coconut curry base",
+   choices:CHOICES,
+   method:"Lunch: basil in center, served with rice topped with carrot.\nDinner: basil in center — NO rice. Recommend rice to guests who didn't order it.",
+   allergens:["wheat","soy","shellfish"]},
+  {id:"greencurry",cat:"curry",name:"Green Curry",tags:[],
+   pieces:"",
+   ingr:"Grilled eggplant · bell pepper · bamboo shoots · basil · green curry paste · mixed veggie · coconut curry base",
+   choices:CHOICES,
+   method:"Lunch: basil in center, served with rice topped with carrot.\nDinner: basil in center only — NO rice. Recommend rice to guests who didn't order it.",
+   allergens:["wheat","soy","shellfish"]},
+  {id:"yellowcurry",cat:"curry",name:"Yellow Curry",tags:["vo"],
+   pieces:"",
+   ingr:"Potato · onion · crispy shallots · yellow curry paste · carrot · coconut curry base",
+   choices:CHOICES,
+   method:"Lunch: topped with green onion, cilantro, crispy shallots, served with rice.\nDinner: same toppings — NO rice. Recommend rice to guests.",
+   allergens:["wheat","soy"]},
+  {id:"pumpkincurry",cat:"curry",name:"Pumpkin Curry",tags:[],
+   pieces:"",
+   ingr:"Kabocha pumpkin · turmeric · bell pepper · southern curry paste · coconut curry base",
+   choices:CHOICES,
+   method:"Lunch: basil in center, served with rice.\nDinner: basil in center — NO rice. Recommend rice to guests.",
+   allergens:["wheat","soy","shellfish","oyster"]},
+  /* STREET FOOD */
+  {id:"friedrice",cat:"street",name:"Thai Fried Rice",tags:["gfo","vo"],
+   pieces:"",
+   ingr:"Garlic · cage-free egg · rice · onion · tomato · green onion · cilantro · crab & shrimp paste · stir-fry sauce",
+   choices:CHOICES,
+   method:"Topped with cilantro and green onion. Served with sliced lime and cucumber on the side.",
+   server_note:"Vegetarian: omit crab paste. GF: stir-fry sauce replaced with fish sauce, salt, sugar.",
+   allergens:["wheat","soy","egg","oyster","mushroom","crab"]},
+  {id:"broccoli",cat:"street",name:"Pad Asian Broccoli",tags:["gfo","vo"],
+   pieces:"",
+   ingr:"Spicy XO sauce · garlic · fresh Thai chili · Asian broccoli · black pepper · stir-fry sauce",
+   choices:CHOICES,
+   method:"Topped with cilantro, crispy garlic, and black pepper. GF: stir-fry sauce replaced with fish sauce, salt, sugar.",
+   server_note:"Inform guest this dish goes really well with crispy pork belly.",
+   allergens:["wheat","soy","mushroom","oyster"]},
+  {id:"eggplant",cat:"street",name:"Pad Spicy Eggplant",tags:["gfo","vo"],
+   pieces:"",
+   ingr:"Bell pepper · garlic · Thai basil · white pepper · jalapeño · eggplant · stir-fry sauce",
+   choices:CHOICES,
+   method:"Topped with cilantro, crispy garlic, fresh basil, and black pepper. GF: stir-fry sauce replaced with fish sauce, salt, sugar.",
+   allergens:["wheat","soy","mushroom","oyster"]},
+  {id:"kapow",cat:"street",name:"Pad Ka Pow",tags:["gfo","vo"],
+   pieces:"",
+   ingr:"Thai basil · garlic · fresh Thai chili · bell pepper · jalapeño · stir-fry sauce",
+   choices:CHOICES,
+   method:"Topped with crispy garlic, fresh basil, and black pepper. GF: stir-fry sauce replaced with fish sauce, salt, sugar.",
+   allergens:["wheat","soy","mushroom","oyster"]},
+
+  {id:"ginger",cat:"street",name:"Pad Fresh Ginger",tags:["gfo","vo"],
+   pieces:"",
+   ingr:"Garlic · white mushrooms · yellow onion · green onion · fresh ginger · shitake mushroom · stir-fry sauce",
+   choices:CHOICES,
+   method:"Topped with cilantro, crispy garlic, and black pepper. GF: stir-fry sauce replaced with fish sauce, salt, sugar.",
+   allergens:["wheat","soy","mushroom","oyster"]},
+  {id:"padkhuakling",cat:"street",name:"Pad Khua Kling",tags:["gfo"],
+   pieces:"",
+   ingr:"Southern dry curry paste · kaffir lime leaves · lemongrass · galangal · fresh chili · green bean",
+   choices:CHOICES,
+   method:"Dry stir-fry style. Served with jasmine rice.",
+   allergens:["wheat","soy","shellfish","oyster","mushroom","fish"]},
+  {id:"padthai",cat:"street",name:"Pad Thai \"Chai Ya\"",tags:["pfo"],
+   pieces:"",
+   ingr:"Pickle radish · thin rice noodles · cage-free egg · coconut milk · tamarind · bean sprouts · chives · peanuts · Pad Thai sauce",
+   choices:CHOICES,
+   method:"Topped with coconut milk and peanut. Chives, fresh bean sprout, carrot, and sliced lime on the side.",
+   allergens:["wheat","soy","egg","peanut","oyster"]},
+  {id:"padseeyou",cat:"street",name:"Pad See You",tags:["gfo","vo"],
+   pieces:"",
+   ingr:"Garlic · flat rice noodles · cage-free egg · carrot · Asian broccoli · stir-fry sauce",
+   choices:CHOICES,
+   method:"Topped with cilantro, crispy garlic, carrot, and black pepper. GF: stir-fry sauce replaced with fish sauce, salt, sugar.",
+   allergens:["wheat","soy","egg","peanut","oyster","mushroom"]},
+  {id:"padkeemow",cat:"street",name:"Pad Kee Mow",tags:["gfo","vo"],
+   pieces:"",
+   ingr:"Jalapeño · flat rice noodles · bamboo shoots · bell pepper · tomato · Thai basil · garlic · stir-fry sauce",
+   choices:CHOICES,
+   method:"Topped with fresh basil, crispy garlic, carrot, and black pepper. GF: stir-fry sauce replaced with fish sauce, salt, sugar.",
+   allergens:["wheat","soy","peanut","oyster","mushroom"]},
+  /* DESSERT */
+
+  {id:"mango",cat:"dessert",name:"Mango Sticky Rice",tags:[],
+   pieces:"",
+   ingr:"Sticky rice · coconut milk · sugar · salt · mango",
+   method:"Sweet coconut sticky rice in center of plate surrounded with sliced mango. Decorated with mint and edible flowers.",
+   allergens:[]},
+  {id:"thaivacation",cat:"dessert",name:"Thai Vacation",tags:[],
+   pieces:"",
+   ingr:"Sticky rice · coconut milk · sugar · salt · coconut ice cream",
+   method:"Sticky rice on half fresh young coconut, topped with coconut ice cream and fresh coconut meat. Decorated with mint and edible flowers.",
+   allergens:[]},
+  {id:"lavacake",cat:"dessert",name:"Chocolate Lava Cake",tags:[],
+   pieces:"",
+   ingr:"Semi-sweet chocolate · unsalted butter · all-purpose flour · confectioners' sugar · salt · eggs",
+   method:"Decorated with mint leaves and edible flowers.",
+   allergens:["wheat","dairy","egg"]},
+  {id:"luksao",cat:"dessert",name:"LUK SAO Platter",tags:[],
+   pieces:"3 desserts: Thai Vacation + Lava Cake + Samui Puff or Khao Niew",
+   ingr:"Combination dessert platter",
+   method:"Decorated with mint leaves and edible flowers.",
+   allergens:["wheat","dairy","egg"]}
+];
+
+/* ── ALLERGEN DATA (from allergen list image) ── */
+var ALLERGEN_SECTIONS=[
+  {
+    section:"STARTS",
+    color:"#fbeaf0",tc:"#4b1528",
+    dishes:[
+      {name:"Daughter Egg Rolls",al:["Wheat","Soy","Egg","Mushroom"],tags:[]},
+      {name:"Samosa",al:["Wheat","Soy"],tags:["V"]},
+      {name:"Ahi Scoops",al:["Gluten","Sesame","Fish Sauce","Soy (in seaweed salad)"],tags:["GFO"]},
+      {name:"Thai Fish Cakes",al:["Gluten","Peanuts"],tags:["PFO"]},
+      {name:"Mieng Kum Kung",al:["Wheat","Soy","Peanuts","Sesame","Shrimp paste"],tags:[]},
+      {name:"Chicken Wings",al:["Fish Sauce"],tags:[]},
+      {name:"Daughter Thai Taco",al:["Fish Sauce"],tags:[]},
+      {name:"Neua Num Tok Rolls",al:["Wheat","Soy","Oyster sauce","Mushroom Powder"],tags:[]}
+    ]
+  },
+  {
+    section:"SOUP",
+    color:"#e6f1fb",tc:"#042c53",
+    dishes:[
+      {name:"Tom Yum",al:["Fish Sauce","Shrimp Paste","Mushroom Powder"],tags:["GF"]},
+      {name:"Tom Kha",al:["Fish Sauce","Mushroom Powder"],tags:["GF"]}
+    ]
+  },
+  {
+    section:"SALAD",
+    color:"#e1f5ee",tc:"#04342c",
+    dishes:[
+      {name:"Papaya Salad",al:["Fish Sauce","Crab Sauce"],tags:["GF"]},
+      {name:"Quinoa Salad",al:["Peanuts","Shrimp Paste","Soy","Wheat","Sesame"],tags:[]},
+      {name:"Nam Khao Tod",al:["Fish Sauce","Egg","Peanut"],tags:["PFO"]}
+    ]
+  },
+  {
+    section:"SPECIAL",
+    color:"#faeeda",tc:"#633806",
+    dishes:[
+      {name:"Kang Tai Pla",al:["Shrimp Paste"],tags:["GFO"]},
+      {name:"Kang Kua Prawns",al:["Wheat","Soy","Shrimp Paste","Oyster Sauce","Mushroom Powder"],tags:["GFO"]},
+      {name:"Tom Yum Fried Rice",al:["Mushroom Powder","Fish Sauce"],tags:["GFO"]},
+      {name:"24 Hours Beef Noodle Soup",al:["Wheat","Soy","Mushroom Powder"],tags:[]},
+      {name:"Crab Fried Rice",al:["Egg","Shrimp Paste","Crab Paste","Fish Sauce (in seafood sauce)","Mushroom Powder"],tags:["GF"]},
+      {name:"Run Juan Seafood Sizzling",al:["Wheat","Soy","Oyster Sauce","Shrimp Paste","Mushroom Powder"],tags:["GFO"]},
+      {name:"Hat Yai Fried Chicken",al:["Wheat","Soy","Mushroom Powder"],tags:[]},
+      {name:"Kai Gor Rhae",al:["Shrimp Paste","Mushroom Powder","Peanuts"],tags:["GFO"]},
+      {name:"Slow Cooked Beef Curry",al:["Wheat","Soy","Shrimp Paste"],tags:[]},
+      {name:"Seua Rhong Haii",al:["Wheat","Soy","Oyster Sauce","Mushroom Powder","Shrimp Paste (in tamarind sauce)"],tags:[]},
+      {name:"Panang Neua",al:["Wheat","Soy","Mushroom Powder"],tags:[]}
+    ]
+  },
+  {
+    section:"CURRY",
+    color:"#fde8e8",tc:"#6b1212",
+    dishes:[
+      {name:"Green Curry",al:["Wheat","Soy","Shrimp Paste"],tags:[]},
+      {name:"Yellow Curry",al:["Wheat","Soy"],tags:["VO"]},
+      {name:"Pumpkin Curry",al:["Wheat","Soy","Shrimp Paste","Oyster Sauce"],tags:[]}
+    ]
+  },
+  {
+    section:"STREET FOOD",
+    color:"#f5c4b3",tc:"#4a1b0c",
+    dishes:[
+      {name:"Thai Fried Rice",al:["Wheat","Soy","Egg","Mushroom Soy Sauce","Oyster Sauce","Shrimp & Crab Paste"],tags:["GFO","VO"]},
+      {name:"Pad Asian Broccoli",al:["Wheat","Soy","Mushroom Soy Sauce","Oyster Sauce"],tags:["GFO","VO"]},
+      {name:"Pad Spicy Eggplant",al:["Wheat","Soy","Mushroom Soy Sauce","Oyster Sauce"],tags:["GFO","VO"]},
+      {name:"Pad Ka Pow",al:["Wheat","Soy","Mushroom Soy Sauce","Oyster Sauce"],tags:["GFO","VO"]},
+      {name:"Pad Fresh Ginger Sauce",al:["Wheat","Soy","Mushroom Soy Sauce","Oyster Sauce"],tags:["GFO","VO"]},
+      {name:"Pad Khua Kling",al:["Wheat","Soy","Shrimp Paste","Oyster Sauce","Mushroom Powder","Fish Sauce"],tags:["GFO"]},
+      {name:"Pad Black Pepper Garlic",al:["Wheat","Soy"],tags:["GFO","VO"]}
+    ]
+  },
+  {
+    section:"NOODLE",
+    color:"#f5c4b3",tc:"#4a1b0c",
+    dishes:[
+      {name:"Pad Thai \"Chai Ya\"",al:["Wheat","Soy","Egg","Peanut","Oyster Sauce"],tags:["PFO"]},
+      {name:"Pad See You",al:["Wheat","Soy","Egg","Peanut","Oyster Sauce","Mushroom Soy Sauce"],tags:["GFO","VO"]},
+      {name:"Pad Kee Mow",al:["Wheat","Soy","Peanut","Oyster Sauce","Mushroom Soy Sauce"],tags:["GFO","VO"]}
+    ]
+  },
+  {
+    section:"NOODLE SOUP",
+    color:"#eeedfe",tc:"#26215c",
+    dishes:[
+      {name:"Tofu Noodle Soup",al:["Mushroom Powder"],tags:["GF","V"]},
+      {name:"Chicken Noodle Soup",al:["Mushroom Powder"],tags:["GF"]}
+    ]
+  }
+];
+
+var SAUCES=[
+  {name:"Mae Ploy Sauce",ingr:"Sugar, water, pickled red chili, vinegar, garlic, salt, xanthan gum"},
+  {name:"Seafood Sauce",ingr:"Red chili, garlic, tomato, lime juice, fish sauce, sugar, MSG"},
+  {name:"Chili Paste",ingr:"Ginger, lime juice, red chili, Pantai chili paste"},
+  {name:"Salad Sauce",ingr:"Red chili, garlic, tomato, lime juice, fish sauce, sugar, MSG, crushed dried chili"},
+  {name:"Tamarind Sauce",ingr:"Palm sugar, shrimp paste, tamarind, thin soy sauce"},
+  {name:"Som Tum Sauce",ingr:"Tamarind, MSG, fish sauce, palm sugar, lime juice, fermented crab"},
+  {name:"Cilantro Lime Vinaigrette",ingr:"Green chili, lime juice, garlic, fish sauce, MSG, sugar, cilantro"},
+  {name:"Peanut Sauce",ingr:"Coconut milk, red curry paste, Panang curry paste, paprika chili, tamarind, salt, sugar, peanut butter"},
+  {name:"Fermented Fish Sauce",ingr:"Fermented fish, fish sauce, shrimp paste, MSG, fermented soybean, roasted rice"},
+  {name:"Sauce Taco",ingr:"Canned pineapple, salt, sugar, vinegar, garlic, Sriracha, Mae Ploy, chili paste, fish sauce, tamarind, ketchup, MSG"},
+  {name:"Stir-Fry Sauce",ingr:"Oyster sauce, thin mushroom soy sauce, thick soy sauce, sweet soy sauce, vegetable seasoning, sugar, MSG"},
+  {name:"Pad Thai Sauce",ingr:"Palm sugar, tamarind, vinegar, salt, paprika, ketchup, oyster sauce, thin soy sauce, MSG, vegetable seasoning"},
+  {name:"Red Curry Paste",ingr:"Red chili, onion, garlic, galangal, lemongrass, kaffir peel, salt"},
+  {name:"Yellow Curry Paste",ingr:"Red chili, onion, garlic, galangal, lemongrass, kaffir lime peel, curry powder"},
+  {name:"Green Curry Paste",ingr:"Green chili, onion, garlic, galangal, lemongrass, kaffir lime peel, salt"},
+  {name:"Panang Curry Paste",ingr:"Red chili, onion, garlic, galangal, lemongrass, kaffir peel, salt"},
+  {name:"Southern Curry Paste",ingr:"Galangal, lemongrass, kaffir lime leaves, black pepper, cilantro seeds, fennel seed, garlic, shrimp paste, turmeric powder"},
+  {name:"Run Juan Paste",ingr:"Dried red chili, red onion, galangal, garlic, paprika"},
+  {name:"Tom Yum Paste",ingr:"Soybean oil, lemongrass, salt, shallot, galangal, chili, water, lime, MSG, citric acid, garlic, sugar"},
+  {name:"Pantai Chili Paste",ingr:"Sugar, shallots, garlic, soybean oil, dried chili, fish sauce, dried shrimp, MSG, paprika"}
+];
+
+var activeTab="all";
+
+/* tag badge html */
+function tagBadges(tags){
+  if(!tags||!tags.length) return '';
+  var map={GF:'<span class="tag tag-gf">GF</span>',GFO:'<span class="tag tag-gfo">GFO</span>',V:'<span class="tag tag-v">V</span>',VO:'<span class="tag tag-vo">VO</span>',PFO:'<span class="tag tag-pfo">PFO</span>'};
+  var h='';for(var i=0;i<tags.length;i++) h+=map[tags[i]]||'';
+  return h;
+}
+
+/* allergen badge html */
+function alBadges(als){
+  if(!als||!als.length) return '';
+  var map={wheat:'<span class="al al-wheat">Wheat</span>',soy:'<span class="al al-soy">Soy</span>',peanut:'<span class="al al-peanut">Peanut</span>',shellfish:'<span class="al al-shellfish">Shellfish</span>',egg:'<span class="al al-egg">Egg</span>',sesame:'<span class="al al-sesame">Sesame</span>',dairy:'<span class="al al-dairy">Dairy</span>',gluten:'<span class="al al-gluten">Gluten</span>',fish:'<span class="al al-fish">Fish</span>',mushroom:'<span class="al al-mushroom">Mushroom</span>',oyster:'<span class="al al-oyster">Oyster</span>',crab:'<span class="al al-crab">Crab</span>'};
+  var h='<div class="al-row">';for(var i=0;i<als.length;i++) h+=map[als[i]]||'';h+='</div>';
+  return h;
+}
+
+function makeDC(d){
+  var c=CAT[d.cat];
+  var badge='<span class="dc-cat" style="background:'+c.bg+';color:'+c.tc+'">'+c.label+'</span>';
+  var tagH=tagBadges(d.tags);
+
+  var front=badge+'<span class="dc-name">'+d.name+'</span>'+(tagH?'<div class="dc-tag-row">'+tagH+'</div>':'')+'<span class="dc-hint">Tap to see details &#9654;</span>';
+
+  var back=badge+'<span class="dc-name">'+d.name+'</span>'+(tagH?'<div class="dc-tag-row">'+tagH+'</div>':'');
+  if(d.pieces) back+='<span class="dc-pieces">'+d.pieces+'</span>';
+  if(d.ingr) back+='<div class="dc-ingr-box">'+d.ingr+'</div>';
+  back+='<hr class="dc-divider">';
+  if(d.sauces_served) back+='<span class="dc-method" style="color:#888">Served with: '+d.sauces_served+'</span>';
+  if(d.method) back+='<span class="dc-method">'+d.method+'</span>';
+  if(d.choices) back+='<div class="dc-choices">'+d.choices+'</div>';
+  if(d.server_note) back+='<div class="dc-server-note">&#9432; '+d.server_note+'</div>';
+  back+=alBadges(d.allergens);
+  back+='<span class="dc-flip">Tap to flip back</span>';
+
+  return '<div class="dc" onclick="toggleDC(this)">'
+    +'<div class="dc-front" style="display:flex">'+front+'</div>'
+    +'<div class="dc-back" style="display:none">'+back+'</div>'
+    +'</div>';
+}
+
+function toggleDC(el){
+  var f=el.querySelector('.dc-front'),b=el.querySelector('.dc-back');
+  if(f.style.display==='none'){f.style.display='flex';b.style.display='none';}
+  else{f.style.display='none';b.style.display='flex';}
+}
+
+function showTab(t,btn){
+  activeTab=t;
+  document.getElementById('search-input').value='';
+  document.getElementById('search-results').style.display='none';
+  document.getElementById('tab-content').style.display='';
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.className='nav-btn';});
+  if(btn) btn.className='nav-btn on';
+  renderTab();
+}
+
+function renderTab(){
+  var tc=document.getElementById('tab-content');
+  if(activeTab==='allergen'){tc.innerHTML=renderAllergenTab();return;}
+  if(activeTab==='sauces'){tc.innerHTML=renderSaucesTab();return;}
+  var list=activeTab==='all'?DISHES:DISHES.filter(function(d){return d.cat===activeTab;});
+  if(!list.length){tc.innerHTML='<div class="no-results">No dishes in this category.</div>';return;}
+  if(activeTab==='all'){
+    var order=["appetizer","soup","salad","special","noodle","curry","street","dessert"];
+    var groups={};
+    for(var i=0;i<list.length;i++){var d=list[i];if(!groups[d.cat])groups[d.cat]=[];groups[d.cat].push(d);}
+    var html='';
+    for(var ci=0;ci<order.length;ci++){
+      var cat=order[ci];
+      if(!groups[cat]) continue;
+      html+='<div class="sec-label">'+CAT[cat].label+'</div><div class="grid">';
+      for(var di=0;di<groups[cat].length;di++) html+=makeDC(groups[cat][di]);
+      html+='</div>';
+    }
+    tc.innerHTML=html;
+  } else {
+    var html='<div class="grid">';
+    for(var i=0;i<list.length;i++) html+=makeDC(list[i]);
+    html+='</div>';
+    tc.innerHTML=html;
+  }
+}
+
+function renderAllergenTab(){
+  var tagMap={GF:'<span class="tag tag-gf">GF</span>',GFO:'<span class="tag tag-gfo">GFO</span>',V:'<span class="tag tag-v">V</span>',VO:'<span class="tag tag-vo">VO</span>',PFO:'<span class="tag tag-pfo">PFO</span>'};
+  var html='';
+  // legend
+  html+='<div class="sec-label">Key</div>';
+  html+='<div class="legend-row">'
+    +'<div class="legend-item"><span class="tag tag-gf">GF</span> Gluten-Free</div>'
+    +'<div class="legend-item"><span class="tag tag-gfo">GFO</span> GF Option Available</div>'
+    +'<div class="legend-item"><span class="tag tag-v">V</span> Vegan</div>'
+    +'<div class="legend-item"><span class="tag tag-vo">VO</span> Vegan Option Available</div>'
+    +'<div class="legend-item"><span class="tag tag-pfo">PFO</span> Peanut-Free Option Available</div>'
+    +'</div>';
+  html+='<div style="font-size:11px;color:#888;margin-bottom:14px;line-height:1.6">GF option: stir-fry sauce is replaced with fish sauce, salt, and sugar for all applicable dishes.</div>';
+
+  for(var si=0;si<ALLERGEN_SECTIONS.length;si++){
+    var sec=ALLERGEN_SECTIONS[si];
+    html+='<div class="al-section-header">';
+    html+='<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:'+sec.color+';color:'+sec.tc+'">'+sec.section+'</span>';
+    html+='<span class="al-section-count">'+sec.dishes.length+' items</span>';
+    html+='</div>';
+    for(var di=0;di<sec.dishes.length;di++){
+      var dish=sec.dishes[di];
+      var tags='';for(var ti=0;ti<dish.tags.length;ti++) tags+=tagMap[dish.tags[ti]]||'';
+      html+='<div class="dish-row">';
+      html+='<div><div class="dish-row-name">'+dish.name+'</div>'+(tags?'<div class="dish-tags">'+tags+'</div>':'')+'</div>';
+      html+='<div class="dish-row-al">'+dish.al.join(' · ')+'</div>';
+      html+='</div>';
+    }
+  }
+  return html;
+}
+
+function renderSaucesTab(){
+  var html='<div class="sec-label">House Sauces & Curry Pastes</div>';
+  for(var i=0;i<SAUCES.length;i++){
+    var s=SAUCES[i];
+    html+='<div class="sauce-card"><div class="sauce-header" onclick="toggleSauce(this)"><span class="sauce-name">'+s.name+'</span><span class="sauce-arrow">&#9654;</span></div><div class="sauce-body" style="display:none">'+s.ingr+'</div></div>';
+  }
+  return html;
+}
+
+function toggleSauce(hdr){
+  var body=hdr.parentNode.querySelector('.sauce-body');
+  var arrow=hdr.querySelector('.sauce-arrow');
+  if(body.style.display==='none'){body.style.display='block';arrow.style.transform='rotate(90deg)';}
+  else{body.style.display='none';arrow.style.transform='rotate(0deg)';}
+}
+
+function doSearch(q){
+  var sr=document.getElementById('search-results');
+  var tc=document.getElementById('tab-content');
+  q=q.trim().toLowerCase();
+  if(!q){sr.style.display='none';tc.style.display='';return;}
+  tc.style.display='none';sr.style.display='';
+  var results=DISHES.filter(function(d){
+    return d.name.toLowerCase().indexOf(q)>-1
+      ||(d.ingr&&d.ingr.toLowerCase().indexOf(q)>-1)
+      ||(d.allergens&&d.allergens.join(' ').indexOf(q)>-1)
+      ||(d.method&&d.method.toLowerCase().indexOf(q)>-1)
+      ||(d.sauces_served&&d.sauces_served.toLowerCase().indexOf(q)>-1);
+  });
+  if(!results.length){sr.innerHTML='<div class="no-results">No results for "'+q+'"</div>';return;}
+  var html='<div class="sec-label">'+results.length+' result'+(results.length!==1?'s':'')+'</div><div class="grid">';
+  for(var i=0;i<results.length;i++) html+=makeDC(results[i]);
+  html+='</div>';
+  sr.innerHTML=html;
+}
+
+renderTab();
+</script>
+</body>
+</html>

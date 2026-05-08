@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Daughter Thai — Daily Sidework</title>
+<style>
+*{-webkit-box-sizing:border-box;box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;background:#f5f4f0;color:#1a1a18;min-height:100vh;-webkit-text-size-adjust:100%}
+
+header{background:#fff;border-bottom:1px solid #e0ddd8;padding:13px 16px;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:space-between;justify-content:space-between;position:-webkit-sticky;position:sticky;top:0;z-index:20}
+.logo{font-size:17px;font-weight:700;letter-spacing:-.2px}
+.logo span{color:#c0392b}
+.sub{font-size:11px;color:#999;margin-top:1px}
+
+.container{max-width:600px;margin:0 auto;padding:16px 16px 40px 16px}
+
+/* day pills */
+.day-strip{display:-webkit-flex;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;margin-bottom:18px;-webkit-flex-wrap:nowrap;flex-wrap:nowrap}
+.day-pill{padding:7px 16px;border-radius:99px;border:1px solid #ddd;background:#fff;color:#666;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;-webkit-appearance:none;appearance:none;font-family:inherit;-webkit-flex-shrink:0;flex-shrink:0;transition:all .15s}
+.day-pill.on{background:#1a1a18;color:#fff;border-color:#1a1a18}
+.day-pill.today{border-color:#c0392b;color:#c0392b}
+.day-pill.today.on{background:#c0392b;color:#fff;border-color:#c0392b}
+
+/* section */
+.day-section{display:none}
+.day-section.active{display:block}
+
+.today-badge{display:inline-block;font-size:10px;font-weight:700;background:#c0392b;color:#fff;padding:2px 8px;border-radius:99px;margin-bottom:12px;letter-spacing:.4px;text-transform:uppercase}
+
+/* role card */
+.role-card{background:#fff;border:1px solid #e8e5e0;border-radius:12px;margin-bottom:10px;overflow:hidden}
+.role-header{padding:13px 16px;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:space-between;justify-content:space-between;cursor:pointer}
+.role-left{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:10px}
+.role-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.badge-server{background:#e6f1fb;color:#042c53}
+.badge-bartender{background:#faeeda;color:#633806}
+.badge-host{background:#e1f5ee;color:#04342c}
+.role-title{font-size:13px;font-weight:700;color:#1a1a18}
+.role-count{font-size:11px;color:#bbb;font-weight:400}
+.role-arrow{font-size:12px;color:#ccc;transition:transform .2s;-webkit-transition:transform .2s;-webkit-flex-shrink:0;flex-shrink:0}
+.role-arrow.open{-webkit-transform:rotate(90deg);transform:rotate(90deg)}
+
+.role-body{display:none;border-top:1px solid #f0ede8;padding:4px 0 8px 0}
+.task-row{display:-webkit-flex;display:flex;-webkit-align-items:flex-start;align-items:flex-start;gap:10px;padding:9px 16px;border-bottom:1px solid #f9f7f5}
+.task-row:last-child{border-bottom:none}
+.task-num{font-size:11px;color:#ccc;font-weight:700;min-width:18px;padding-top:1px}
+.task-text{font-size:13px;color:#1a1a18;line-height:1.5;-webkit-flex:1;flex:1}
+.task-tag{font-size:10px;background:#fbeaf0;color:#4b1528;padding:2px 6px;border-radius:6px;font-weight:600;white-space:nowrap;margin-top:2px;display:inline-block}
+
+/* note box */
+.note-box{background:#faf9f6;border:1px solid #ede9e3;border-radius:8px;padding:10px 13px;font-size:12px;color:#888;line-height:1.6;margin:0 16px 10px 16px;font-style:italic}
+
+/* empty */
+.empty{text-align:center;padding:40px 20px;color:#bbb;font-size:14px}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">Daughter <span>Thai</span></div>
+    <div class="sub">Daily Sidework Schedule</div>
+  </div>
+  <div style="font-size:11px;color:#bbb">Server · Bartender</div>
+</header>
+
+<div class="container">
+  <div class="day-strip" id="day-strip"></div>
+  <div id="day-content"></div>
+</div>
+
+<script>
+var DAYS_ORDER=["MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY","SUNDAY"];
+var DAY_SHORT={"MONDAY":"Mon","TUESDAY":"Tue","WEDNESDAY":"Wed","THURSDAY":"Thu","FRIDAY":"Fri","SATURDAY":"Sat","SUNDAY":"Sun"};
+var JS_DAY_MAP={0:"SUNDAY",1:"MONDAY",2:"TUESDAY",3:"WEDNESDAY",4:"THURSDAY",5:"FRIDAY",6:"SATURDAY"};
+
+// S = Server, B = Bartender, H = Host
+var SCHEDULE={
+  MONDAY:{
+    note:"",
+    roles:[
+      {role:"S",title:"Server 1",tasks:[
+        "Fill Thai Tea into pitcher (กรอก Thai Tea ใส่เหยือก)",
+        "Clean pendant lights Zone E x4",
+        "Clean wall panels facing E"
+      ]},
+      {role:"S",title:"Server 2",tasks:[
+        "Clean table legs, chair legs, and seat cushions — all of Section E",
+        "Clean railings and slats in Section E",
+        "Clean pendant lights Zone E x4"
+      ]},
+      {role:"B",title:"Bartender",tasks:[
+        "Wipe down top 2 liquor shelves — right side (no dust on bottles or shelf)",
+        "Check glass inventory",
+        "Deep clean bar sink (scrub like washing a car)"
+      ]}
+    ]
+  },
+  TUESDAY:{
+    note:"",
+    roles:[
+      {role:"S",title:"Server 1",tasks:[
+        "Clean table legs and chair legs D1–D6",
+        "Make chili fish sauce (พริกน้ำปลา) and chili vinegar (พริกน้ำส้ม)"
+      ]},
+      {role:"S",title:"Server 2",tasks:[
+        "Clean 3 large yellow pendant lights",
+        "Clean large mirror at Table D",
+        "Clean wall panels facing Table D and baseboard at D5–D6"
+      ]},
+      {role:"B",title:"Bartender",tasks:[
+        "Wipe down top 2 liquor shelves — left side (no dust on bottles or shelf)",
+        "Store away liquor bottles",
+        "Deep clean bar sink (scrub like washing a car)"
+      ]}
+    ]
+  },
+  WEDNESDAY:{
+    note:"",
+    roles:[
+      {role:"S",title:"Server 1",tasks:[
+        "Clean table legs and chair legs C1–C5",
+        "Clean lower wall panels on Section C side"
+      ]},
+      {role:"S",title:"Server 2",tasks:[
+        "Wipe book display shelf at C5",
+        "Clean wall where fork shelf is mounted",
+        "Clean all pendant lights in Section C"
+      ]},
+      {role:"B",title:"Bartender",tasks:[
+        "Clean surface under wine glasses, liquor glasses, hot water machine, coffee machine, and POS",
+        "Store away liquor bottles",
+        "Make Lemongrass Syrup x1 large pitcher (red lid)",
+        "Deep clean bar sink (scrub like washing a car)"
+      ]}
+    ]
+  },
+  THURSDAY:{
+    note:"",
+    roles:[
+      {role:"S",title:"Server 1",tasks:[
+        "Clean walls, chair legs, and pendant lights at front of bar",
+        "Clean walls and door at front of restroom"
+      ]},
+      {role:"S",title:"Server 2",tasks:[
+        "Clean 3-tier glass rack at service station",
+        "Wipe countertop at front of bar",
+        "Clean baseboard at front of restroom and front of bar"
+      ]},
+      {role:"B",title:"Bartender",tasks:[
+        "Move large ice bin out and clean underneath",
+        "Store away liquor bottles",
+        "Brew Anchan 1 batch (ต้ม Anchan 1 Batch)",
+        "Remove liquor rail and send for washing (use screwdriver to unscrew)",
+        "Deep clean bar sink (scrub like washing a car)",
+        "Wipe down top 2 liquor shelves — left side (no dust on bottles or shelf)"
+      ]}
+    ]
+  },
+  FRIDAY:{
+    note:"",
+    roles:[
+      {role:"S",title:"Server 1",tasks:[
+        "Fill Thai Tea into pitcher (กรอก Thai Tea ใส่เหยือก)",
+        "Check and dust railings at window next to white door"
+      ]},
+      {role:"S",title:"Server 2",tasks:[
+        "Clean table legs, seat cushions, and lower wall panels — Section W",
+        "Clean white and blue doors",
+        "Clean wall between W1 and W2"
+      ]},
+      {role:"B",title:"Bartender",tasks:[
+        "Check liquor stock",
+        "Check Viola Juice",
+        "Check beer glass refrigerator",
+        "Wipe down top 2 liquor shelves — right side (no dust on bottles or shelf)",
+        "Deep clean bar sink (scrub like washing a car)"
+      ]}
+    ]
+  },
+  SATURDAY:{
+    note:"",
+    roles:[
+      {role:"S",title:"Server 1",tasks:[
+        "Deep clean hand sink at bar (scrub like washing a car)",
+        "Wipe staff storage cubbies (6 slots) and white wall touching floor"
+      ]},
+      {role:"S",title:"Server 2",tasks:[
+        "Deep clean beverage bar",
+        "Wipe bar syrup shelf (cardboard box section)"
+      ]},
+      {role:"S",title:"Server 3",tasks:[
+        "Wash all cutlery holders",
+        "Check tea and coffee stock",
+        "Clean tea and coffee storage shelf"
+      ]},
+      {role:"B",title:"Bartender",tasks:[
+        "Check beer and wine stock",
+        "Clean shaved ice machine",
+        "Deep clean bar sink (scrub like washing a car)"
+      ]}
+    ]
+  },
+  SUNDAY:{
+    note:"",
+    roles:[
+      {role:"S",title:"Server 1 — Host Area",tasks:[
+        "Dust and remove cobwebs from all artificial flowers in the restaurant, including front entrance and Love light sign"
+      ]},
+      {role:"S",title:"Server 2",tasks:[
+        "Clean all POS terminals and projectors",
+        "Clean 3-tier Thai Tea glass rack",
+        "Wipe all countertops at server station"
+      ]},
+      {role:"B",title:"Bartender",tasks:[
+        "Clean beer and wine refrigerator",
+        "Check dry garnishes",
+        "Check and restock bar supplies — Bitters (all types), Monkey, Mermaid, umbrellas, hot to-go cups, bottle stoppers, bar napkins, colored straws, etc.",
+        "Deep clean bar sink (scrub like washing a car)"
+      ]}
+    ]
+  }
+};
+
+var activeDay="";
+
+function getTodayKey(){
+  var d=new Date().getDay();
+  return JS_DAY_MAP[d];
+}
+
+function getRoleBadge(role){
+  if(role==="B") return '<span class="role-badge badge-bartender">Bartender</span>';
+  if(role==="H") return '<span class="role-badge badge-host">Host</span>';
+  return '<span class="role-badge badge-server">Server</span>';
+}
+
+function renderDayStrip(){
+  var today=getTodayKey();
+  var html="";
+  for(var i=0;i<DAYS_ORDER.length;i++){
+    var d=DAYS_ORDER[i];
+    var isToday=(d===today);
+    var isActive=(d===activeDay);
+    var cls="day-pill"+(isToday?" today":"")+(isActive?" on":"");
+    html+='<button class="'+cls+'" onclick="setDay(\''+d+'\')">'+DAY_SHORT[d]+(isToday?" ●":"")+'</button>';
+  }
+  document.getElementById("day-strip").innerHTML=html;
+}
+
+function renderDay(){
+  var today=getTodayKey();
+  var data=SCHEDULE[activeDay];
+  if(!data){document.getElementById("day-content").innerHTML='<div class="empty">No tasks for this day.</div>';return;}
+  var html="";
+  if(activeDay===today) html+='<div class="today-badge">Today</div>';
+  if(data.note) html+='<div class="note-box">'+data.note+'</div>';
+  for(var i=0;i<data.roles.length;i++){
+    var r=data.roles[i];
+    var taskCount=r.tasks.length;
+    html+='<div class="role-card">'
+      +'<div class="role-header" onclick="toggleRole(this)">'
+      +'<div class="role-left">'+getRoleBadge(r.role)+'<span class="role-title">'+r.title+'</span></div>'
+      +'<div style="display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:8px">'
+      +'<span class="role-count">'+taskCount+' task'+(taskCount!==1?"s":"")+'</span>'
+      +'<span class="role-arrow">&#9654;</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="role-body">';
+    for(var j=0;j<r.tasks.length;j++){
+      html+='<div class="task-row">'
+        +'<span class="task-num">'+(j+1)+'</span>'
+        +'<span class="task-text">'+r.tasks[j]+'</span>'
+        +'</div>';
+    }
+    html+='</div></div>';
+  }
+  document.getElementById("day-content").innerHTML=html;
+}
+
+function toggleRole(header){
+  var body=header.parentNode.querySelector(".role-body");
+  var arrow=header.querySelector(".role-arrow");
+  if(body.style.display==="none"||body.style.display===""){
+    body.style.display="block";
+    arrow.className="role-arrow open";
+  } else {
+    body.style.display="none";
+    arrow.className="role-arrow";
+  }
+}
+
+function setDay(d){
+  activeDay=d;
+  renderDayStrip();
+  renderDay();
+}
+
+// init — open today by default
+var today=getTodayKey();
+activeDay=today||"MONDAY";
+renderDayStrip();
+renderDay();
+</script>
+</body>
+</html>
