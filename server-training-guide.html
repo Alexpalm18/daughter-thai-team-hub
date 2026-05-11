@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Server Training Guide — Daughter Thai Kitchen</title>
+  <style>
+    :root {
+      --brand:       #b85c2a;
+      --brand-light: #f5ede6;
+      --brand-dark:  #7a3a18;
+      --accent:      #e8a068;
+      --text:        #2b2016;
+      --muted:       #6b5740;
+      --bg:          #fdfaf7;
+      --card:        #ffffff;
+      --border:      #e8d9cc;
+      --green:       #2e7d4f;
+      --green-light: #eaf5ee;
+      --red:         #c0392b;
+      --red-light:   #fdecea;
+      --orange:      #d4600a;
+      --orange-light:#fff3e8;
+      --radius:      10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand) 100%);
+      color: #fff;
+      padding: 40px 24px 32px;
+      text-align: center;
+    }
+    header .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      margin-bottom: 14px;
+    }
+    header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
+    header p  { font-size: 1rem; opacity: 0.85; max-width: 480px; margin: 0 auto; }
+
+    /* ── Back link ── */
+    .back-bar {
+      background: var(--brand-light);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 24px;
+    }
+    .back-bar a {
+      color: var(--brand-dark);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .back-bar a:hover { text-decoration: underline; }
+
+    /* ── Layout ── */
+    main { max-width: 780px; margin: 0 auto; padding: 36px 20px 60px; }
+
+    /* ── Intro card ── */
+    .intro-card {
+      background: var(--brand-light);
+      border-left: 4px solid var(--brand);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 36px;
+    }
+    .intro-card p { color: var(--muted); }
+
+    /* ── Section headers ── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 16px;
+      margin-top: 44px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* ── Step cards ── */
+    .step-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .step-header {
+      background: var(--brand-light);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .step-number {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--brand);
+      color: #fff;
+      font-size: 14px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-title { font-size: 1rem; font-weight: 700; color: var(--brand-dark); }
+    .step-body { padding: 20px; }
+    .step-body p { color: var(--muted); margin-bottom: 12px; }
+    .step-body p:last-child { margin-bottom: 0; }
+
+    /* ── Script bubbles ── */
+    .script {
+      background: #fffbf5;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      margin: 10px 0;
+      font-style: italic;
+      color: var(--brand-dark);
+      font-size: 14px;
+    }
+    .script-label {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 4px; font-style: normal;
+    }
+
+    /* ── Branches ── */
+    .branch-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px; margin: 12px 0;
+    }
+    @media (max-width: 520px) { .branch-grid { grid-template-columns: 1fr; } }
+    .branch { border-radius: 8px; padding: 14px; }
+    .branch.yes { background: var(--green-light); border: 1px solid #a8d5b7; }
+    .branch.no  { background: #fff8e6;            border: 1px solid #f0d88a; }
+    .branch-tag { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+    .branch.yes .branch-tag { color: var(--green); }
+    .branch.no  .branch-tag { color: #9a6f00; }
+    .branch p { font-size: 13px; color: var(--text); margin: 0; }
+
+    /* ── Callouts ── */
+    .callout {
+      border-radius: 8px; padding: 14px 16px; margin: 12px 0;
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .callout.important { background: var(--red-light);    border: 1px solid #e8aaa5; }
+    .callout.tip       { background: var(--green-light);  border: 1px solid #a8d5b7; }
+    .callout.info      { background: #eef4fb;             border: 1px solid #add3f0; }
+    .callout.warning   { background: var(--orange-light); border: 1px solid #f0c090; }
+    .callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .callout-body { font-size: 13px; color: var(--text); }
+    .callout-body strong { display: block; margin-bottom: 3px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .callout.important .callout-body strong { color: var(--red); }
+    .callout.tip       .callout-body strong { color: var(--green); }
+    .callout.info      .callout-body strong { color: #1a5c8a; }
+    .callout.warning   .callout-body strong { color: var(--orange); }
+
+    /* ── Spice scale ── */
+    .spice-scale {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 14px 0;
+    }
+    @media (max-width: 480px) { .spice-scale { grid-template-columns: 1fr 1fr; } }
+    .spice-level {
+      border-radius: 8px;
+      padding: 12px 10px;
+      text-align: center;
+      border: 2px solid transparent;
+    }
+    .spice-level.mild   { background: #fff8e6; border-color: #f0d88a; }
+    .spice-level.medium { background: #fff0e0; border-color: #f0b070; }
+    .spice-level.spicy  { background: #fde8e0; border-color: #e8805a; }
+    .spice-level.thai   { background: #fddada; border-color: var(--red); }
+    .spice-emoji   { font-size: 22px; margin-bottom: 4px; }
+    .spice-name    { font-size: 12px; font-weight: 800; letter-spacing: 0.5px; }
+    .spice-level.mild   .spice-name { color: #9a6f00; }
+    .spice-level.medium .spice-name { color: #c06020; }
+    .spice-level.spicy  .spice-name { color: var(--brand); }
+    .spice-level.thai   .spice-name { color: var(--red); }
+    .spice-score   { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .spice-note    { font-size: 11px; color: var(--muted); margin-top: 3px; font-style: italic; }
+
+    /* ── Dish warning cards ── */
+    .dish-warning {
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      overflow: hidden;
+      border: 2px solid;
+    }
+    .dish-warning.level-medium { border-color: #f0b070; }
+    .dish-warning.level-extreme { border-color: var(--red); }
+    .dish-warning-header {
+      padding: 14px 20px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .dish-warning.level-medium  .dish-warning-header { background: #fff0e0; }
+    .dish-warning.level-extreme .dish-warning-header { background: var(--red-light); }
+    .dish-warning-icon { font-size: 26px; flex-shrink: 0; }
+    .dish-warning-title { font-size: 1rem; font-weight: 800; }
+    .dish-warning.level-medium  .dish-warning-title { color: #c06020; }
+    .dish-warning.level-extreme .dish-warning-title { color: var(--red); }
+    .dish-warning-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .dish-warning-body { padding: 18px 20px; background: #fff; }
+    .dish-warning-body p { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
+    .warn-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--red); color: #fff;
+      border-radius: 20px; padding: 3px 10px;
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 0.5px; text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .warn-steps {
+      counter-reset: warn-counter;
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+    }
+    .warn-steps li {
+      counter-increment: warn-counter;
+      display: flex; gap: 10px;
+      align-items: flex-start;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px; color: var(--text);
+    }
+    .warn-steps li:last-child { border-bottom: none; }
+    .warn-step-num {
+      width: 22px; height: 22px;
+      border-radius: 50%; background: var(--red); color: #fff;
+      font-size: 11px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .policy-box {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px; margin-top: 12px;
+    }
+    @media (max-width: 480px) { .policy-box { grid-template-columns: 1fr; } }
+    .policy-item {
+      border-radius: 8px; padding: 12px 14px;
+    }
+    .policy-item.no-return  { background: var(--red-light);   border: 1px solid #e8aaa5; }
+    .policy-item.cool-down  { background: var(--green-light); border: 1px solid #a8d5b7; }
+    .policy-item-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+    .policy-item.no-return  .policy-item-label { color: var(--red); }
+    .policy-item.cool-down  .policy-item-label { color: var(--green); }
+    .policy-item p { font-size: 12px; color: var(--text); margin: 0; }
+
+    /* ── Check-back tracker ── */
+    .checkback-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 12px 0; }
+    @media (max-width: 520px) { .checkback-grid { grid-template-columns: 1fr; } }
+    .checkback-item {
+      background: var(--brand-light); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px; text-align: center;
+    }
+    .checkback-badge { font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--brand); margin-bottom: 6px; }
+    .checkback-item h4 { font-size: 13px; color: var(--brand-dark); margin-bottom: 5px; }
+    .checkback-item p  { font-size: 12px; color: var(--muted); }
+
+    /* ── Philosophy ── */
+    .philosophy-card {
+      background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand) 100%);
+      border-radius: var(--radius); padding: 28px 24px; color: #fff; margin-top: 8px;
+    }
+    .philosophy-card h3 { font-size: 1.1rem; margin-bottom: 18px; opacity: 0.9; }
+    .pill-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill {
+      background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px; padding: 5px 14px; font-size: 13px; font-weight: 600;
+    }
+
+    /* ── Final reminder ── */
+    .final-card {
+      background: var(--green-light); border: 1px solid #a8d5b7;
+      border-radius: var(--radius); padding: 22px 24px; margin-top: 8px;
+    }
+    .final-card h3 { color: var(--green); font-size: 1rem; margin-bottom: 12px; }
+    .impact-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    @media (max-width: 480px) { .impact-list { grid-template-columns: 1fr; } }
+    .impact-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); }
+    .impact-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center; padding: 24px; font-size: 12px;
+      color: var(--muted); border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="tag">Staff Training</div>
+    <h1>Server Training Guide</h1>
+    <p>Steps of Service &amp; Table Approach — Daughter Thai Kitchen</p>
+  </header>
+
+  <div class="back-bar">
+    <a href="index.html">← Back to Staff Hub</a>
+  </div>
+
+  <main>
+
+    <!-- Intro -->
+    <div class="intro-card">
+      <p>At Daughter Thai Kitchen, our service style is <strong>warm, attentive, genuine, and efficient.</strong> We want every guest to feel welcomed, guided, and taken care of from the moment they sit down.</p>
+      <br>
+      <p>The goal is not just to take orders — it is to <strong>create a comfortable and organized dining experience.</strong></p>
+    </div>
+
+    <!-- Steps of Service -->
+    <div class="section-label">Steps of Service</div>
+
+    <!-- Step 1 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">1</div>
+        <div class="step-title">Greeting the Table</div>
+      </div>
+      <div class="step-body">
+        <p>Approach the table within <strong>1–2 minutes</strong> after guests are seated. Smile, make eye contact, and greet confidently.</p>
+        <div class="script">
+          <div class="script-label">Standard Greeting</div>
+          "Hi, welcome to Daughter Thai Kitchen. My name is Joy, and I'll be taking care of you guys today."
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">2</div>
+        <div class="step-title">Ask if It's Their First Time</div>
+      </div>
+      <div class="step-body">
+        <p>This helps you gauge how much guidance the guests may need.</p>
+        <div class="script">
+          <div class="script-label">Ask</div>
+          "Is this your first time dining with us?"
+        </div>
+        <div class="branch-grid">
+          <div class="branch yes">
+            <div class="branch-tag">✓ First Time</div>
+            <p>"Well, welcome to Daughter Thai! Thank you so much for being here today." <em>Offer to guide them through the menu.</em></p>
+          </div>
+          <div class="branch no">
+            <div class="branch-tag">↩ Returning Guest</div>
+            <p>"Welcome back! Thank you so much for coming back to see us."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">3</div>
+        <div class="step-title">Offer Water</div>
+      </div>
+      <div class="step-body">
+        <div class="script">
+          <div class="script-label">Ask</div>
+          "Can we start you off with water? We have sparkling mineral water or regular tap water."
+        </div>
+        <div class="callout important">
+          <div class="callout-icon">⚡</div>
+          <div class="callout-body">
+            <strong>Important</strong>
+            Bring water promptly. This is part of the guest's first impression — water service should feel quick and attentive.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">4</div>
+        <div class="step-title">Return for Drinks &amp; Appetizers</div>
+      </div>
+      <div class="step-body">
+        <p>After dropping off water, return and ask for other drinks.</p>
+        <div class="script">
+          <div class="script-label">Ask</div>
+          "Can I get you started with any cocktails, wine, beer, or other drinks today?"
+        </div>
+        <div class="script">
+          <div class="script-label">If They Need More Time</div>
+          "No problem at all, take your time. I'll come back for drinks and appetizers."
+        </div>
+        <div class="callout tip">
+          <div class="callout-icon">💡</div>
+          <div class="callout-body">
+            <strong>Why This Matters</strong>
+            This guides the natural flow of service. Guests understand the next step is drinks and appetizers — they won't feel rushed or lost in the menu.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">5</div>
+        <div class="step-title">Ask About Allergies Early</div>
+      </div>
+      <div class="step-body">
+        <p>Before taking food orders, always ask about allergies or dietary restrictions.</p>
+        <div class="script">
+          <div class="script-label">Ask</div>
+          "Before we order, does anyone at the table have any allergies or dietary restrictions I should know about?"
+        </div>
+        <div class="script">
+          <div class="script-label">Gluten-Free Example</div>
+          "Anything marked GFO on the menu means it can be made gluten-free."
+        </div>
+        <div class="callout important">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-body">
+            <strong>Important</strong>
+            Never guess about allergies. Always check with the kitchen or manager if unsure. Guest safety comes first.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 6 — Spice Levels -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">6</div>
+        <div class="step-title">Guide Guests Through Our Spice Levels</div>
+      </div>
+      <div class="step-body">
+        <p>Our spice scale is based on <strong>Thai standards</strong> — which are significantly hotter than most Thai restaurants in the United States. Always set this expectation clearly when guests order spicy dishes.</p>
+
+        <div class="spice-scale">
+          <div class="spice-level mild">
+            <div class="spice-emoji">🌶️</div>
+            <div class="spice-name">Thai Mild</div>
+            <div class="spice-score">~2–3 / 10</div>
+            <div class="spice-note">Gentle warmth</div>
+          </div>
+          <div class="spice-level medium">
+            <div class="spice-emoji">🌶️🌶️</div>
+            <div class="spice-name">Thai Medium</div>
+            <div class="spice-score">~6–7 / 10</div>
+            <div class="spice-note">Noticeably spicy</div>
+          </div>
+          <div class="spice-level spicy">
+            <div class="spice-emoji">🌶️🌶️🌶️</div>
+            <div class="spice-name">Spicy</div>
+            <div class="spice-score">~8–9 / 10</div>
+            <div class="spice-note">Intense heat</div>
+          </div>
+          <div class="spice-level thai">
+            <div class="spice-emoji">🔥🔥</div>
+            <div class="spice-name">Thai Spicy</div>
+            <div class="spice-score">10+ / 10</div>
+            <div class="spice-note">Authentically hot</div>
+          </div>
+        </div>
+
+        <div class="callout warning">
+          <div class="callout-icon">🌶️</div>
+          <div class="callout-body">
+            <strong>Key Message for Guests</strong>
+            Our "medium" is not the same as a typical American Thai restaurant's medium. Always use the number scale — it helps guests understand immediately. <em>"Our Thai Medium is about a 6 or 7 out of 10."</em>
+          </div>
+        </div>
+
+        <div class="script">
+          <div class="script-label">How to Communicate It</div>
+          "Just so you know, our spice levels are based on Thai standards — they're a bit hotter than most Thai places here. Our Thai Medium is about a 6 or 7 out of 10. Would you like to go with that, or would you prefer Thai Mild to start?"
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 7 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">7</div>
+        <div class="step-title">Taking the Food Order</div>
+      </div>
+      <div class="step-body">
+        <p>When returning to take the food order, <strong>never approach with "Are you ready?"</strong> Instead, use a warm, team-oriented tone.</p>
+        <div class="branch-grid">
+          <div class="branch yes">
+            <div class="branch-tag">✓ Say This</div>
+            <p>"Do we have any questions about the menu?" <br>or<br> "Are we ready to order?"</p>
+          </div>
+          <div class="branch no">
+            <div class="branch-tag">✕ Not This</div>
+            <p>"Are you ready?"</p>
+          </div>
+        </div>
+        <div class="callout info">
+          <div class="callout-icon">💬</div>
+          <div class="callout-body">
+            <strong>Why</strong>
+            Using "we" feels warmer, smoother, and less abrupt — it keeps the tone collaborative and hospitable.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 8 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">8</div>
+        <div class="step-title">After Taking the Order</div>
+      </div>
+      <div class="step-body">
+        <p>Before leaving the table, let guests know what happens next so they feel informed and at ease.</p>
+        <div class="script">
+          <div class="script-label">Say</div>
+          "Perfect, I'll get these started for you, and I'll be back if you have any questions."
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 9 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">9</div>
+        <div class="step-title">Confirm Orders Were Sent Correctly</div>
+      </div>
+      <div class="step-body">
+        <p>After entering the order, always verify it went through properly.</p>
+        <ul style="list-style: none; padding: 0; margin: 10px 0;">
+          <li style="padding: 5px 0; padding-left: 20px; color: var(--muted);">✓ Double check every item</li>
+          <li style="padding: 5px 0; padding-left: 20px; color: var(--muted);">✓ Confirm modifiers are correct</li>
+          <li style="padding: 5px 0; padding-left: 20px; color: var(--muted);">✓ Make sure the ticket reached the kitchen</li>
+        </ul>
+        <div class="callout important">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-body">
+            <strong>Important</strong>
+            Handheld devices and POS systems can fail or disconnect. Always verify the kitchen received the ticket.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 10 — Check-Backs -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">10</div>
+        <div class="step-title">Table Check-Backs <span style="color: var(--brand); font-size: 12px; font-weight: 800; margin-left: 8px;">VERY IMPORTANT</span></div>
+      </div>
+      <div class="step-body">
+        <p>Servers should check back at least <strong>3 times</strong> during the meal.</p>
+        <div class="checkback-grid">
+          <div class="checkback-item">
+            <div class="checkback-badge">1st Check</div>
+            <h4>Right After Food Arrives</h4>
+            <p>"Does everything look okay here? Can I grab you extra napkins, chili oil, spice tray, or chopsticks?"</p>
+          </div>
+          <div class="checkback-item">
+            <div class="checkback-badge">2nd Check</div>
+            <h4>Mid-Meal</h4>
+            <p>"How is everything tasting so far?" — Catch issues early before the guest leaves unhappy.</p>
+          </div>
+          <div class="checkback-item">
+            <div class="checkback-badge">3rd Check</div>
+            <h4>End of Meal</h4>
+            <p>"How was everything tonight?" Then transition: "Would you like to look at dessert or another round of drinks?"</p>
+          </div>
+        </div>
+        <div class="callout tip">
+          <div class="callout-icon">💡</div>
+          <div class="callout-body">
+            <strong>Why Check-Backs Matter</strong>
+            Catching issues early prevents bad experiences, negative reviews, and uncomfortable situations at the end of service.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- HIGH-ALERT DISHES                        -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section-label">High-Alert Dishes &amp; Drinks — Special Warnings Required</div>
+
+    <div class="callout info" style="margin-bottom: 20px;">
+      <div class="callout-icon">ℹ️</div>
+      <div class="callout-body">
+        <strong>Why This Section Exists</strong>
+        Some dishes require extra communication before the order is placed. Taking a few extra seconds to warn the guest protects their experience — and yours. Once the food is served, we cannot take it back.
+      </div>
+    </div>
+
+    <!-- Papaya Salad -->
+    <div class="dish-warning level-medium">
+      <div class="dish-warning-header">
+        <div class="dish-warning-icon">🥗</div>
+        <div>
+          <div class="dish-warning-title">Papaya Salad</div>
+          <div class="dish-warning-sub">Starts at Thai Medium — approximately 6–7 out of 10</div>
+        </div>
+      </div>
+      <div class="dish-warning-body">
+        <p>This dish <strong>starts at Thai Medium</strong> — which is already a 6–7 on our scale. Many guests assume "medium" means mild. Always clarify before the order is finalized.</p>
+
+        <div class="script">
+          <div class="script-label">What to Say</div>
+          "Just so you know, our papaya salad starts at Thai Medium — that's about a 6 or 7 out of 10 on our spice scale. Would you like it at that level, or would you prefer Thai Mild?"
+        </div>
+
+        <div class="callout warning">
+          <div class="callout-icon">🌶️</div>
+          <div class="callout-body">
+            <strong>Always Give the Number</strong>
+            Saying "6 or 7 out of 10" makes it click. Most guests will nod and say "oh okay" — that's a win. They're informed and can order with confidence.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Southern Fish Curry -->
+    <div class="dish-warning level-extreme">
+      <div class="dish-warning-header">
+        <div class="dish-warning-icon">🍛</div>
+        <div>
+          <div class="dish-warning-title">Southern Fish Curry</div>
+          <div class="dish-warning-sub">Extreme heat · Distinct fermented fish flavor · Warn at least 3 times</div>
+        </div>
+      </div>
+      <div class="dish-warning-body">
+        <p>This is one of our most <strong>authentically intense dishes</strong> and the one that catches guests off guard most often. It requires a specific, repeated warning — every single time.</p>
+
+        <p>Two things make this dish different:</p>
+        <ul style="list-style: none; padding: 0; margin-bottom: 12px;">
+          <li style="padding: 4px 0; font-size: 13px; color: var(--text);">🔥 <strong>Extreme spice</strong> — this is 12 out of 10. Not a typo.</li>
+          <li style="padding: 4px 0; font-size: 13px; color: var(--text);">🐟 <strong>Distinct fermented fishiness</strong> — we use fermented fish guts in the curry. It is a non-coconut milk curry with a bold, pungent flavor that is not for everyone.</li>
+        </ul>
+
+        <div class="warn-badge">⚠ Warn at Least 3 Times</div>
+
+        <ol class="warn-steps">
+          <li>
+            <div class="warn-step-num">1</div>
+            <div><strong>Warn about the heat.</strong> "This curry is extremely spicy — I'd say 12 out of 10. It's one of the hottest dishes we serve."</div>
+          </li>
+          <li>
+            <div class="warn-step-num">2</div>
+            <div><strong>Warn about the flavor profile.</strong> "It's also not a typical curry — there's no coconut milk, and we use fermented fish, so it has a very distinct, bold fishiness to it."</div>
+          </li>
+          <li>
+            <div class="warn-step-num">3</div>
+            <div><strong>Confirm they still want it.</strong> "We just want to make sure it's something you'll really enjoy. Are you comfortable with both the heat and the flavor?"</div>
+          </li>
+        </ol>
+
+        <div class="callout warning">
+          <div class="callout-icon">💛</div>
+          <div class="callout-body">
+            <strong>If the Guest Gets Irritated by the Warnings</strong>
+            Some guests may feel you're being too cautious. Reassure them warmly — it's not about stopping them, it's about making sure they love what they ordered.<br><br>
+            <em>"I'm sorry — I don't mean to be repetitive! We absolutely love this dish and want you to try it. We just want to make sure it's truly something you'll enjoy, because we care about your experience."</em>
+          </div>
+        </div>
+
+        <div class="policy-box">
+          <div class="policy-item no-return">
+            <div class="policy-item-label">🚫 No Returns Policy</div>
+            <p>We do not take this dish back if it turns out to be too spicy or not to the guest's taste. Once you have warned them thoroughly and they order, you can confidently hold that line. Your job is to warn — and you did.</p>
+          </div>
+          <div class="policy-item cool-down">
+            <div class="policy-item-label">✅ If They're Struggling — Be Helpful</div>
+            <p>Even after warnings, if a guest is having difficulty with the heat, step in with care. Offer <strong>a glass of milk</strong> or <strong>sliced cucumber</strong> to help cool things down. We can't take the dish back, but we can still take care of the guest.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Muay Thai Punch -->
+    <div class="dish-warning level-medium">
+      <div class="dish-warning-header">
+        <div class="dish-warning-icon">🍹</div>
+        <div>
+          <div class="dish-warning-title">Muay Thai Punch <span style="font-size: 12px; font-weight: 600; color: var(--muted);">— Cocktail</span></div>
+          <div class="dish-warning-sub">Bold ginger · Bitters · Tamarind — not a typical sweet cocktail</div>
+        </div>
+      </div>
+      <div class="dish-warning-body">
+        <p>The Muay Thai Punch is made with <strong>vodka, elderflower liqueur, ginger, and tamarind</strong> — and it is sweet and fruity. The surprise for most guests comes from the <strong>tamarind sauce</strong>, which adds a funky, complex depth that goes beyond what people expect from a cocktail. People who love it, love it. But guests who aren't ready for that character often want to swap it out.</p>
+
+        <p>Because this comes up often, always give guests a heads-up about the tamarind before they order. One sentence is all it takes.</p>
+
+        <div class="script">
+          <div class="script-label">What to Say</div>
+          "The Muay Thai Punch is sweet and fruity — vodka, elderflower, ginger — but the tamarind sauce gives it a really unique, complex funkiness that some people love and some people find surprising. Just wanted to mention it so you know what to expect!"
+        </div>
+
+        <div class="callout warning">
+          <div class="callout-icon">🍹</div>
+          <div class="callout-body">
+            <strong>Know Your Guest</strong>
+            If a guest seems drawn to sweeter, more familiar cocktails, take a beat to describe the tamarind character. It's a small moment that prevents a big complaint later.
+          </div>
+        </div>
+
+        <div class="policy-box">
+          <div class="policy-item no-return">
+            <div class="policy-item-label">🚫 No Returns on Drinks</div>
+            <p>We cannot take the drink back if a guest doesn't enjoy the flavor — that is a cost the restaurant absorbs every time, and it adds up. Once you've described it and they order, the responsibility is theirs. You warned them, and that's what matters.</p>
+          </div>
+          <div class="policy-item cool-down">
+            <div class="policy-item-label">✅ If They're Unhappy — Help Them, But Be Clear</div>
+            <p>Acknowledge their feeling kindly: <em>"I'm so sorry it wasn't quite what you expected!"</em> Then offer to help them find something they'll enjoy from the menu. <strong>Do not replace the drink.</strong> They are still responsible for paying for the original cocktail — a new drink would be an additional order.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Service Philosophy -->
+    <div class="section-label">Service Philosophy</div>
+
+    <div class="philosophy-card">
+      <h3>We want guests to feel welcomed, taken care of, relaxed, and appreciated.</h3>
+      <div style="margin-bottom: 18px;">
+        <div style="font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; opacity: 0.7; margin-bottom: 8px;">Good Service Means</div>
+        <div class="pill-grid">
+          <span class="pill">Guiding the experience</span>
+          <span class="pill">Anticipating needs</span>
+          <span class="pill">Creating comfort</span>
+          <span class="pill">Attentive, not hovering</span>
+          <span class="pill">Smooth &amp; organized</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; opacity: 0.7; margin-bottom: 8px;">Tone of Service</div>
+        <div class="pill-grid">
+          <span class="pill">Warm</span>
+          <span class="pill">Natural</span>
+          <span class="pill">Calm</span>
+          <span class="pill">Professional</span>
+          <span class="pill">Genuine</span>
+        </div>
+      </div>
+      <div style="margin-top: 18px; background: rgba(255,255,255,0.12); border-radius: 8px; padding: 12px 16px; font-size: 13px; opacity: 0.9;">
+        Avoid sounding: robotic, rushed, too casual, or scripted. <strong>Guests should feel hosted, not processed.</strong>
+      </div>
+    </div>
+
+    <!-- Final Reminder -->
+    <div class="section-label">Final Reminder</div>
+
+    <div class="final-card">
+      <h3>💪 The First Few Minutes Set the Tone</h3>
+      <p style="color: var(--muted); font-size: 14px; margin-bottom: 14px;">Strong hospitality creates strong service. Those first interactions determine:</p>
+      <div class="impact-list">
+        <div class="impact-item"><div class="impact-dot"></div>Guest comfort</div>
+        <div class="impact-item"><div class="impact-dot"></div>Drink sales</div>
+        <div class="impact-item"><div class="impact-dot"></div>Appetizer sales</div>
+        <div class="impact-item"><div class="impact-dot"></div>Overall dining experience</div>
+        <div class="impact-item"><div class="impact-dot"></div>Tip percentage</div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    Daughter Thai Kitchen — Internal Staff Training &nbsp;|&nbsp; Not for distribution
+  </footer>
+
+</body>
+</html>
