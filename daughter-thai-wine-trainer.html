@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wine Training — Daughter Thai</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: #140c08;
+    background-image:
+      radial-gradient(ellipse at 50% 0%, rgba(120, 50, 20, 0.18) 0%, transparent 65%),
+      radial-gradient(ellipse at 80% 80%, rgba(90, 30, 10, 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 20% 60%, rgba(100, 60, 10, 0.10) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    color: #ede5d8;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  .header { background: linear-gradient(160deg, #2a1508 0%, #1a0d06 50%, #120b05 100%); border-bottom: 2px solid #c9a84c; padding: 24px 16px 18px; text-align: center; position: relative; overflow: hidden; }
+  .header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 120%, rgba(201,168,76,0.12) 0%, transparent 60%); pointer-events: none; }
+  .header h1 { color: #c9a84c; font-size: 22px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; text-shadow: 0 0 30px rgba(201,168,76,0.3); }
+  .header p { color: #a08060; font-size: 12px; margin-top: 4px; letter-spacing: 1px; }
+  .lang-switch { margin-top: 10px; }
+  .lang-switch a { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; text-decoration: none; border: 1px solid rgba(201,168,76,0.3); color: #a08060; }
+  .lang-switch a.active { background: rgba(201,168,76,0.15); color: #c9a84c; border-color: #c9a84c; }
+  .lang-switch span { color: #503828; margin: 0 4px; }
+  .tabs { display: flex; overflow-x: auto; background: rgba(20, 10, 4, 0.95); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(201,168,76,0.15); position: sticky; top: 0; z-index: 10; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn { flex: 1; min-width: 80px; padding: 12px 8px; background: none; border: none; color: #906848; font-size: 12px; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; border-bottom: 3px solid transparent; transition: all 0.2s; }
+  .tab-btn.active { color: #c9a84c; border-bottom-color: #c9a84c; background: rgba(201,168,76,0.06); }
+  .tab-btn:hover:not(.active) { color: #b0905a; background: rgba(201,168,76,0.03); }
+  .tab-content { display: none; padding: 16px; max-width: 700px; margin: 0 auto; padding-bottom: 40px; }
+  .tab-content.active { display: block; }
+  .section-title { color: #c9a84c; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin: 24px 0 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(201,168,76,0.2); }
+  .section-title:first-child { margin-top: 8px; }
+  .card { background: rgba(38, 22, 10, 0.85); border: 1px solid rgba(201,168,76,0.12); border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+  .card-title { color: #c9a84c; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .card-sub { color: #a08060; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .card p { color: #d4c8b0; font-size: 14px; line-height: 1.6; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .compare-box { background: rgba(25, 14, 6, 0.8); border: 1px solid rgba(201,168,76,0.1); border-radius: 8px; padding: 12px; }
+  .compare-box h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .compare-box ul { list-style: none; }
+  .compare-box li { font-size: 13px; color: #c8bfb0; padding: 3px 0; padding-left: 14px; position: relative; }
+  .compare-box li::before { content: "·"; position: absolute; left: 0; color: #c9a84c; }
+  .red-box h4 { color: #e05050; }
+  .white-box h4 { color: #d4c47a; }
+  .grape-card { background: rgba(38, 22, 10, 0.85); border: 1px solid rgba(201,168,76,0.12); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.25); transition: border-color 0.2s; }
+  .grape-card:hover { border-color: rgba(201,168,76,0.25); }
+  .grape-name { font-size: 15px; font-weight: 700; color: #ede5d8; }
+  .grape-name .aka { font-size: 12px; font-weight: 400; color: #906848; margin-left: 6px; }
+  .grape-type-badge { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; }
+  .badge-red { background: rgba(80, 20, 20, 0.7); color: #e07070; }
+  .badge-white { background: rgba(50, 45, 10, 0.7); color: #d4c47a; }
+  .flavor-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .flavor-tag { background: rgba(20, 12, 5, 0.8); border: 1px solid rgba(201,168,76,0.15); border-radius: 20px; padding: 3px 10px; font-size: 12px; color: #b09870; }
+  .grape-tip { font-size: 13px; color: #c8bfb0; margin-top: 8px; line-height: 1.5; }
+  .taste-step { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .taste-step:last-child { border-bottom: none; }
+  .step-num { background: linear-gradient(135deg, #c9a84c, #a07828); color: #100800; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; margin-top: 2px; box-shadow: 0 2px 8px rgba(201,168,76,0.3); }
+  .step-content h4 { color: #c9a84c; font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .step-content p { font-size: 13px; color: #c8bfb0; }
+  .char-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
+  .char-item { background: rgba(20, 12, 5, 0.75); border: 1px solid rgba(201,168,76,0.1); border-radius: 10px; padding: 12px; }
+  .char-item h5 { color: #c9a84c; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .char-item p { font-size: 12px; color: #b0a080; line-height: 1.5; }
+  .sweetness-scale { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to right, #1e1208, #3a2810, #c9a84c); border-radius: 20px; padding: 8px 14px; margin: 8px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .sweetness-scale span { font-size: 11px; font-weight: 600; }
+  .sweetness-scale span:first-child { color: #a09070; }
+  .sweetness-scale span:last-child { color: #1a0800; }
+  .wine-type-card { background: rgba(38, 22, 10, 0.85); border-radius: 12px; padding: 14px; margin-bottom: 12px; border-left: 4px solid; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+  .wine-type-card.red { border-left-color: #8b2020; }
+  .wine-type-card.white { border-left-color: #c9a84c; }
+  .wine-type-card.rose { border-left-color: #c47090; }
+  .wine-type-card.sparkling { border-left-color: #90b0d0; }
+  .wine-type-card.dessert { border-left-color: #a07030; }
+  .wine-type-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .wine-type-card.red h3 { color: #e05050; }
+  .wine-type-card.white h3 { color: #d4c47a; }
+  .wine-type-card.rose h3 { color: #e090b0; }
+  .wine-type-card.sparkling h3 { color: #90c0e0; }
+  .wine-type-card.dessert h3 { color: #c9a84c; }
+  .wine-type-card p { font-size: 13px; color: #c8bfb0; margin-bottom: 8px; }
+  .wine-type-card .grapes { font-size: 12px; color: #a09070; }
+  .wine-type-card .grapes strong { color: #c9a84c; }
+  .pairing-list { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .pairing-list li { background: #141009; border: 1px solid #2e2010; border-radius: 16px; padding: 3px 10px; font-size: 12px; color: #b0a080; }
+  .vocab-table { width: 100%; border-collapse: collapse; }
+  .vocab-table th { background: #1f1608; color: #c9a84c; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; padding: 8px 10px; text-align: left; border-bottom: 2px solid #2e2010; }
+  .vocab-table td { padding: 8px 10px; border-bottom: 1px solid #1f1608; font-size: 13px; color: #c8bfb0; vertical-align: top; }
+  .vocab-table td:first-child { font-weight: 700; color: #d4c8a0; white-space: nowrap; }
+  .vocab-table tr:last-child td { border-bottom: none; }
+  .champagne-types { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .champ-item { background: #141009; border: 1px solid #2e2010; border-radius: 8px; padding: 8px 10px; }
+  .champ-item .name { font-size: 13px; font-weight: 700; color: #90c0e0; }
+  .champ-item .sugar { font-size: 12px; color: #a09070; margin-top: 2px; }
+  .tip-box { background: #1a1a08; border: 1px solid #2e2808; border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+  .tip-box .tip-label { color: #b8c860; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .tip-box p { font-size: 13px; color: #c8bfb0; }
+  .old-new { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .world-box { background: #141009; border: 1px solid #2e2010; border-radius: 8px; padding: 12px; }
+  .world-box h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .world-box.old h4 { color: #c9a84c; }
+  .world-box.new h4 { color: #70b8d0; }
+  .world-box ul { list-style: none; }
+  .world-box li { font-size: 12px; color: #c8bfb0; padding: 2px 0; padding-left: 12px; position: relative; }
+  .world-box li::before { content: "·"; position: absolute; left: 0; color: #c9a84c; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🍷 Wine Training</h1>
+  <p>Daughter Thai Kitchen · Staff Guide</p>
+  <div class="lang-switch">
+    <a href="daughter-thai-wine-trainer.html" class="active">EN</a>
+    <span>|</span>
+    <a href="daughter-thai-wine-trainer-th.html">ไทย</a>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('basics')">Basics</button>
+  <button class="tab-btn" onclick="showTab('types')">Wine Types</button>
+  <button class="tab-btn" onclick="showTab('grapes')">Grapes</button>
+  <button class="tab-btn" onclick="showTab('service')">Service</button>
+</div>
+
+<!-- TAB 1: BASICS -->
+<div id="tab-basics" class="tab-content active">
+
+  <p class="section-title">What Is Wine?</p>
+  <div class="card">
+    <p>Wine is an alcoholic drink made from <strong style="color:#c9a84c">fermented grape juice</strong>. If a label just says "wine," it's made from grapes. Key fact: wine is made from <em>fruit</em>, beer is made from <em>grains</em>.</p>
+    <p style="margin-top:8px">The year on the label = the <strong style="color:#c9a84c">vintage</strong> — the year the grapes were harvested and made into wine. Each grape harvest happens once per year.</p>
+  </div>
+
+  <p class="section-title">5 Characteristics of Wine</p>
+  <div class="char-grid">
+    <div class="char-item">
+      <h5>🍬 Sweetness</h5>
+      <p>From residual sugar (RS) — sugar left after fermentation. Ranges from bone-dry to very sweet.</p>
+    </div>
+    <div class="char-item">
+      <h5>⚡ Acidity</h5>
+      <p>Natural acids in grapes (tartaric, malic). High acidity = refreshing & tart. Cooler climates = higher acidity.</p>
+    </div>
+    <div class="char-item">
+      <h5>🌿 Tannin</h5>
+      <p>From grape skins, seeds & oak barrels. Creates a drying, grippy sensation. Mainly in red wines.</p>
+    </div>
+    <div class="char-item">
+      <h5>🔥 Alcohol</h5>
+      <p>Created when yeast eats grape sugar. Typical range: 10–15% ABV. Higher sugar in grapes = higher ABV.</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:2px">
+    <div class="char-item" style="background:transparent;border:none;padding:0">
+      <h5 style="color:#c9a84c;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">⚖️ Body</h5>
+      <p style="font-size:13px;color:#b0a080">The weight/fullness of wine in your mouth. Light → Medium → Full. Higher alcohol & tannin = fuller body.</p>
+    </div>
+  </div>
+
+  <p class="section-title">Sweetness Scale</p>
+  <div class="sweetness-scale">
+    <span>Bone Dry</span>
+    <span>Dry</span>
+    <span>Off-Dry</span>
+    <span>Semi-Sweet</span>
+    <span>Sweet</span>
+  </div>
+  <div class="card" style="margin-top:8px">
+    <p><strong style="color:#c9a84c">"Dry"</strong> = no perceptible sweetness (less than 0.2% residual sugar). Most table wines are dry. Riesling can be dry <em>or</em> sweet — always check!</p>
+  </div>
+
+  <p class="section-title">How to Taste Wine (SEE · SWIRL · SNIFF · SIP)</p>
+  <div class="card">
+    <div class="taste-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>SEE 👁️</h4>
+        <p>Hold glass to the light. Check color, clarity, and viscosity. Deeper color in reds = riper grapes or longer skin contact. White wine with golden hue = oaked or aged.</p>
+      </div>
+    </div>
+    <div class="taste-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>SWIRL 🌀</h4>
+        <p>Swirl gently to oxygenate. Watch the "legs" (tears) running down the glass — thick, slow legs = more sugar or alcohol. This also releases the aromas.</p>
+      </div>
+    </div>
+    <div class="taste-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>SNIFF 👃</h4>
+        <p>Stick your nose in and inhale. Note intensity (faint vs. strong) and aromas — fruit, floral, earthy, spice, oak/vanilla. If it smells like wet cardboard = corked wine.</p>
+      </div>
+    </div>
+    <div class="taste-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>SIP 👄</h4>
+        <p>Take a sip and let it coat your mouth. Note sweetness, acidity (makes you salivate), tannin (drying sensation), body, and finish. A long, pleasant finish = quality wine.</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title">Old World vs. New World</p>
+  <div class="old-new">
+    <div class="world-box old">
+      <h4>🏰 Old World</h4>
+      <ul>
+        <li>Europe (France, Italy, Spain, Germany, Portugal)</li>
+        <li>Label by <em>region</em> (Bordeaux, Burgundy, Chianti)</li>
+        <li>Lighter body, higher acidity</li>
+        <li>Earthy, mineral, herbal notes</li>
+        <li>Traditional, strict rules</li>
+      </ul>
+    </div>
+    <div class="world-box new">
+      <h4>🌎 New World</h4>
+      <ul>
+        <li>USA, Australia, NZ, Argentina, Chile, South Africa</li>
+        <li>Label by <em>grape variety</em> (Chardonnay, Cab Sauv)</li>
+        <li>Fuller body, higher alcohol</li>
+        <li>Fruit-forward, jammy, oaky</li>
+        <li>Modern, innovative</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- TAB 2: WINE TYPES -->
+<div id="tab-types" class="tab-content">
+
+  <p class="section-title">The 5 Main Types</p>
+
+  <div class="wine-type-card red">
+    <h3>🍷 Red Wine</h3>
+    <p>Made with red/black grapes — skin, seeds, and stems are included in fermentation, giving red its color, tannin, and structure. Fermented at higher temperatures.</p>
+    <div class="grapes"><strong>Easy-drinking reds:</strong> Merlot, Pinot Noir, Malbec</div>
+    <div class="grapes"><strong>Bold reds:</strong> Cabernet Sauvignon, Syrah/Shiraz, Zinfandel</div>
+    <ul class="pairing-list">
+      <li>Steak</li><li>Lamb</li><li>Pasta</li><li>Hard cheese</li><li>Mushrooms</li>
+    </ul>
+  </div>
+
+  <div class="wine-type-card white">
+    <h3>🥂 White Wine</h3>
+    <p>Made from white grapes <em>or</em> red grapes with skins removed. Only the juice is fermented. Results in a crisp, refreshing profile — acidic, creamy, or fruity depending on the grape.</p>
+    <div class="grapes"><strong>Light whites:</strong> Sauvignon Blanc, Pinot Grigio, Riesling</div>
+    <div class="grapes"><strong>Full whites:</strong> Chardonnay, Viognier, Sémillon</div>
+    <ul class="pairing-list">
+      <li>Seafood</li><li>Fish</li><li>Chicken</li><li>Salads</li><li>Soft cheese</li><li>Thai food ✓</li>
+    </ul>
+  </div>
+
+  <div class="wine-type-card rose">
+    <h3>🌸 Rosé Wine</h3>
+    <p>Red grapes fermented with skin contact for only 12–36 hours (just enough to pick up pink color). Light, refreshing, low tannin. Can range from bone dry to slightly sweet.</p>
+    <div class="grapes"><strong>Common grapes:</strong> Pinot Noir, Grenache, Sangiovese, Merlot</div>
+    <ul class="pairing-list">
+      <li>Salads</li><li>Charcuterie</li><li>Light pasta</li><li>Summer dishes</li>
+    </ul>
+  </div>
+
+  <div class="wine-type-card sparkling">
+    <h3>✨ Sparkling Wine</h3>
+    <p>Any wine with CO₂ bubbles. The bubbles come from a second fermentation. They all fall under "sparkling wine" — the name just changes depending on <em>where</em> it's made.</p>
+    <div style="margin:10px 0 6px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:rgba(20,14,30,0.6);border:1px solid rgba(144,176,208,0.2);border-radius:8px;padding:10px">
+        <div style="color:#90c0e0;font-weight:700;font-size:13px">🥂 Champagne</div>
+        <div style="font-size:12px;color:#b0b8c8;margin-top:4px;line-height:1.5">Only from the <strong style="color:#ede5d8">Champagne region, France</strong>. Made from Pinot Noir, Chardonnay & Pinot Meunier. The gold standard.</div>
+      </div>
+      <div style="background:rgba(20,14,30,0.6);border:1px solid rgba(144,176,208,0.2);border-radius:8px;padding:10px">
+        <div style="color:#90c0e0;font-weight:700;font-size:13px">🇮🇹 Prosecco</div>
+        <div style="font-size:12px;color:#b0b8c8;margin-top:4px;line-height:1.5">From <strong style="color:#ede5d8">Veneto, Italy</strong>. Made from Glera grape. Lighter, fruitier, more affordable. Great for cocktails (Aperol Spritz).</div>
+      </div>
+      <div style="background:rgba(20,14,30,0.6);border:1px solid rgba(144,176,208,0.2);border-radius:8px;padding:10px">
+        <div style="color:#90c0e0;font-weight:700;font-size:13px">🇪🇸 Cava</div>
+        <div style="font-size:12px;color:#b0b8c8;margin-top:4px;line-height:1.5">From <strong style="color:#ede5d8">Spain</strong> (mainly Catalonia). Made in the same method as Champagne but with local grapes. Dry, toasty, excellent value.</div>
+      </div>
+      <div style="background:rgba(20,14,30,0.6);border:1px solid rgba(144,176,208,0.2);border-radius:8px;padding:10px">
+        <div style="color:#90c0e0;font-weight:700;font-size:13px">🌍 Sparkling Wine</div>
+        <div style="font-size:12px;color:#b0b8c8;margin-top:4px;line-height:1.5">Everything else — USA, Australia, NZ, etc. Same style, different origin. If it's not from those three regions, it's just called <strong style="color:#ede5d8">Sparkling Wine</strong>.</div>
+      </div>
+    </div>
+    <ul class="pairing-list" style="margin-top:4px">
+      <li>Celebrations</li><li>Oysters</li><li>Sushi</li><li>Fried foods</li><li>Light starters</li>
+    </ul>
+  </div>
+
+  <div class="wine-type-card dessert">
+    <h3>🍯 Dessert & Fortified Wine</h3>
+    <p>Dessert wines are made from very ripe, late-harvest grapes — nearly raisined on the vine. Fortified wines have spirits (usually brandy) added to stop fermentation or raise alcohol to 18–22% ABV.</p>
+    <div class="grapes"><strong>Key styles:</strong> Port (Portugal), Sherry (Spain), Madeira (Portugal), Vermouth (Italy), Marsala (Sicily)</div>
+    <ul class="pairing-list">
+      <li>Desserts</li><li>Cheese</li><li>Aperitif</li><li>Digestif</li>
+    </ul>
+  </div>
+
+  <p class="section-title">Champagne Sweetness Levels</p>
+  <div class="tip-box">
+    <div class="tip-label">💡 Server Knowledge</div>
+    <p>When guests ask for "dry" Champagne, they mean Brut or Extra Brut. "Extra Dry" is actually slightly sweeter than Brut — counterintuitive but true!</p>
+  </div>
+  <div class="champagne-types">
+    <div class="champ-item"><div class="name">Extra Brut</div><div class="sugar">0 g/L sugar — bone dry</div></div>
+    <div class="champ-item"><div class="name">Brut ⭐</div><div class="sugar">&lt;15 g/L — dry, most popular</div></div>
+    <div class="champ-item"><div class="name">Extra Sec</div><div class="sugar">12–20 g/L — off-dry</div></div>
+    <div class="champ-item"><div class="name">Sec</div><div class="sugar">17–35 g/L — lightly sweet</div></div>
+    <div class="champ-item"><div class="name">Demi-Sec</div><div class="sugar">35–50 g/L — medium sweet</div></div>
+    <div class="champ-item"><div class="name">Doux</div><div class="sugar">&gt;50 g/L — very sweet</div></div>
+  </div>
+
+</div>
+
+<!-- TAB 3: GRAPES -->
+<div id="tab-grapes" class="tab-content">
+
+  <p class="section-title">Red Grape Varieties</p>
+
+  <div class="grape-card">
+    <div class="grape-name">Cabernet Sauvignon <span class="aka">"King of Red Wine"</span></div>
+    <span class="grape-type-badge badge-red">Red</span>
+    <p class="grape-tip">The world's most widely planted red grape. Bold, structured, high tannin, naturally acidic. Almost always blended (with Merlot or Cab Franc) to soften it.</p>
+    <div class="flavor-bar">
+      <span class="flavor-tag">Black cherry</span><span class="flavor-tag">Black currant</span><span class="flavor-tag">Cedar</span><span class="flavor-tag">Tobacco</span><span class="flavor-tag">Spice</span>
+    </div>
+    <p class="grape-tip" style="margin-top:8px"><strong style="color:#c9a84c">Best from:</strong> Napa Valley (USA) for fruit-forward; Bordeaux (France) for classic structure; Chile for value.</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Merlot</div>
+    <span class="grape-type-badge badge-red">Red</span>
+    <p class="grape-tip">Soft, velvety, approachable. Lower tannin than Cab Sauv. Very popular with Thai guests. The most widely planted grape in Bordeaux.</p>
+    <div class="flavor-bar">
+      <span class="flavor-tag">Blackberry</span><span class="flavor-tag">Plum</span><span class="flavor-tag">Chocolate</span><span class="flavor-tag">Oak</span><span class="flavor-tag">Black pepper</span>
+    </div>
+    <p class="grape-tip" style="margin-top:8px"><strong style="color:#c9a84c">Best from:</strong> Chile for value; Saint-Émilion &amp; Pomerol (Bordeaux) for premium.</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Pinot Noir <span class="aka">"The Princess"</span></div>
+    <span class="grape-type-badge badge-red">Red</span>
+    <p class="grape-tip">Thin-skinned, hard to grow, expensive. Light-to-medium body, low tannin, high acidity. Fragrant, elegant, and complex. Best served slightly chilled.</p>
+    <div class="flavor-bar">
+      <span class="flavor-tag">Cherry</span><span class="flavor-tag">Strawberry</span><span class="flavor-tag">Mushroom</span><span class="flavor-tag">Earth</span><span class="flavor-tag">Rose</span>
+    </div>
+    <p class="grape-tip" style="margin-top:8px"><strong style="color:#c9a84c">Best from:</strong> Burgundy (France) for the classic; Oregon (USA); Chile for value.</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Syrah / Shiraz</div>
+    <span class="grape-type-badge badge-red">Red</span>
+    <p class="grape-tip">Same grape, different name depending on origin. "Syrah" = Old World (France), "Shiraz" = New World (Australia). High tannin, bold, peppery. Thrives in hot, dry climates.</p>
+    <div class="flavor-bar">
+      <span class="flavor-tag">Blueberry</span><span class="flavor-tag">Black olive</span><span class="flavor-tag">Smoke</span><span class="flavor-tag">Black pepper</span><span class="flavor-tag">Meat</span>
+    </div>
+    <p class="grape-tip" style="margin-top:8px"><strong style="color:#c9a84c">Best from:</strong> Rhône Valley (France) for spice + elegance; Australia (Penfolds) for rich fruit.</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Malbec</div>
+    <span class="grape-type-badge badge-red">Red</span>
+    <p class="grape-tip">Originally from France but found its home in Argentina. Inky purple color, high tannin, full-bodied, fruity. Great value. Pairs beautifully with grilled meats.</p>
+    <div class="flavor-bar">
+      <span class="flavor-tag">Blackberry</span><span class="flavor-tag">Plum</span><span class="flavor-tag">Cocoa</span><span class="flavor-tag">Violet</span>
+    </div>
+    <p class="grape-tip" style="margin-top:8px"><strong style="color:#c9a84c">Best from:</strong> Mendoza, Argentina — best quality for price, every time.</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Zinfandel</div>
+    <span class="grape-type-badge badge-red">Red</span>
+    <p class="grape-tip">Grapes ripen unevenly in the bunch. High sugar = high alcohol. Rich, jammy, and bold. Also made as a pink "White Zinfandel" (sweet rosé style).</p>
+    <div class="flavor-bar">
+      <span class="flavor-tag">Raspberry jam</span><span class="flavor-tag">Black pepper</span><span class="flavor-tag">Licorice</span><span class="flavor-tag">Smoke</span>
+    </div>
+  </div>
+
+  <p class="section-title">White Grape Varieties</p>
+
+  <div class="grape-card">
+    <div class="grape-name">Chardonnay <span class="aka">"Queen of White Wine"</span></div>
+    <span class="grape-type-badge badge-white">White</span>
+    <p class="grape-tip">The world's most popular white grape. Highly influenced by winemaking style. <strong>Unoaked</strong> = crisp, fresh, green apple. <strong>Oaked</strong> = buttery, creamy, toasty vanilla. Champagne uses Chardonnay as its primary white grape.</p>
+    <div class="flavor-bar">
+      <span class="flavor-tag">Apple</span><span class="flavor-tag">Pear</span><span class="flavor-tag">Peach</span><span class="flavor-tag">Butter</span><span class="flavor-tag">Vanilla</span><span class="flavor-tag">Hazelnut</span>
+    </div>
+    <p class="grape-tip" style="margin-top:8px"><strong style="color:#c9a84c">Best from:</strong> Chablis (France) for mineral, unoaked; Burgundy for classic; Australia for tropical.</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Sauvignon Blanc</div>
+    <span class="grape-type-badge badge-white">White</span>
+    <p class="grape-tip">Always dry. High acidity, herbaceous, refreshing. A perfect food wine — especially with seafood and Asian cuisine like ours. Best drunk young and cold.</p>
+    <div class="flavor-bar">
+      <span class="flavor-tag">Grapefruit</span><span class="flavor-tag">Fresh cut grass</span><span class="flavor-tag">Green pepper</span><span class="flavor-tag">Lemon</span><span class="flavor-tag">Gooseberry</span>
+    </div>
+    <p class="grape-tip" style="margin-top:8px"><strong style="color:#c9a84c">Best from:</strong> Marlborough, New Zealand (aromatic & floral); Sancerre, France (classic); Loire Valley.</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Riesling</div>
+    <span class="grape-type-badge badge-white">White</span>
+    <p class="grape-tip">Aromatic, high acidity, can be bone dry or very sweet. One of the most food-friendly wines — especially with spicy food! Great with Thai dishes.</p>
+    <div class="flavor-bar">
+      <span class="flavor-tag">Peach</span><span class="flavor-tag">Apricot</span><span class="flavor-tag">Petrol (aged)</span><span class="flavor-tag">Honey</span><span class="flavor-tag">Lime</span>
+    </div>
+    <p class="grape-tip" style="margin-top:8px"><strong style="color:#c9a84c">Best from:</strong> Mosel, Germany for sweet/off-dry; Alsace, France for dry and spiced versions. Always check sweetness level!</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Pinot Grigio / Pinot Gris</div>
+    <span class="grape-type-badge badge-white">White</span>
+    <p class="grape-tip">Same grape: <strong>Pinot Grigio</strong> (Italian style) = light, crisp, simple, easy drinking. <strong>Pinot Gris</strong> (Alsatian style) = fuller, richer, more aromatic, higher alcohol.</p>
+    <div class="flavor-bar">
+      <span class="flavor-tag">Green apple</span><span class="flavor-tag">Lemon</span><span class="flavor-tag">Almond</span><span class="flavor-tag">Honey</span>
+    </div>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Gewürztraminer</div>
+    <span class="grape-type-badge badge-white">White</span>
+    <p class="grape-tip">Very aromatic and spicy (Gewürz = spice in German). Bold, low acidity, slightly bitter. Excellent pair with spicy Thai food — a DT secret weapon.</p>
+    <div class="flavor-bar">
+      <span class="flavor-tag">Lychee</span><span class="flavor-tag">Rose water</span><span class="flavor-tag">Ginger</span><span class="flavor-tag">Tropical fruit</span>
+    </div>
+    <p class="grape-tip" style="margin-top:8px"><strong style="color:#c9a84c">Best from:</strong> Alsace, France. Excellent with Thai curries and spicy dishes.</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Moscato / Muscat</div>
+    <span class="grape-type-badge badge-white">White</span>
+    <p class="grape-tip">One of the oldest grape varieties. Sweet, low alcohol (5–7%), grapey and fragrant. Moscato d'Asti from Italy is the most popular style. Light, refreshing, and fun.</p>
+    <div class="flavor-bar">
+      <span class="flavor-tag">White peach</span><span class="flavor-tag">Apricot</span><span class="flavor-tag">Orange blossom</span><span class="flavor-tag">Honey</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- TAB 4: SERVICE -->
+<div id="tab-service" class="tab-content">
+
+  <p class="section-title">Serving Temperatures</p>
+  <div class="card">
+    <table style="width:100%;border-collapse:collapse">
+      <tr style="border-bottom:1px solid #2e2010">
+        <td style="padding:8px 4px;color:#c9a84c;font-weight:700;font-size:13px">Sparkling / Champagne</td>
+        <td style="padding:8px 4px;color:#b0a080;font-size:13px;text-align:right">38–45°F (3–7°C)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #2e2010">
+        <td style="padding:8px 4px;color:#d4c47a;font-weight:700;font-size:13px">White Wine (light)</td>
+        <td style="padding:8px 4px;color:#b0a080;font-size:13px;text-align:right">45–50°F (7–10°C)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #2e2010">
+        <td style="padding:8px 4px;color:#d4c47a;font-weight:700;font-size:13px">White Wine (full) / Rosé</td>
+        <td style="padding:8px 4px;color:#b0a080;font-size:13px;text-align:right">50–55°F (10–13°C)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #2e2010">
+        <td style="padding:8px 4px;color:#e07070;font-weight:700;font-size:13px">Red Wine (light)</td>
+        <td style="padding:8px 4px;color:#b0a080;font-size:13px;text-align:right">55–60°F (13–16°C)</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 4px;color:#e07070;font-weight:700;font-size:13px">Red Wine (full-bodied)</td>
+        <td style="padding:8px 4px;color:#b0a080;font-size:13px;text-align:right">60–65°F (16–18°C)</td>
+      </tr>
+    </table>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">💡 Tip</div>
+    <p>When in doubt — chill it slightly. A wine that's too warm loses its aroma and freshness. You can always warm a red in your hands, but you can't un-warm a white.</p>
+  </div>
+
+  <p class="section-title">Wine & Thai Food Pairing</p>
+  <div class="card" style="margin-bottom:10px">
+    <div class="card-title">Spicy Dishes (Curries, Larb, Papaya Salad)</div>
+    <p>Off-dry or sweet wines balance heat. <strong style="color:#c9a84c">Riesling, Gewürztraminer, Moscato</strong> are your best friends. Avoid high-tannin reds — tannin amplifies spice.</p>
+  </div>
+  <div class="card" style="margin-bottom:10px">
+    <div class="card-title">Seafood &amp; Light Dishes</div>
+    <p><strong style="color:#c9a84c">Sauvignon Blanc, Pinot Grigio, unoaked Chardonnay.</strong> High acidity cuts through richness and complements delicate flavors.</p>
+  </div>
+  <div class="card" style="margin-bottom:10px">
+    <div class="card-title">Grilled Meats &amp; Rich Sauces</div>
+    <p><strong style="color:#c9a84c">Cabernet Sauvignon, Malbec, Syrah.</strong> Tannin grips fat, and bold flavors stand up to powerful sauces.</p>
+  </div>
+  <div class="card" style="margin-bottom:10px">
+    <div class="card-title">Pork &amp; Duck</div>
+    <p><strong style="color:#c9a84c">Pinot Noir, Merlot.</strong> Soft tannin complements the delicate meat without overpowering it.</p>
+  </div>
+  <div class="card" style="margin-bottom:10px">
+    <div class="card-title">Vegetable-Forward Dishes</div>
+    <p><strong style="color:#c9a84c">Rosé, Sauvignon Blanc, Pinot Gris.</strong> Fresh, herbaceous wines mirror the freshness of vegetables.</p>
+  </div>
+
+  <p class="section-title">Key Wine Vocabulary</p>
+  <table class="vocab-table">
+    <thead>
+      <tr><th>Term</th><th>What it means</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Dry</td><td>No sweetness — all sugar fermented away</td></tr>
+      <tr><td>Off-dry</td><td>Hint of sweetness, but not sweet</td></tr>
+      <tr><td>Crisp</td><td>High acidity, refreshing, lively</td></tr>
+      <tr><td>Tannic</td><td>Drying, grippy sensation on your gums</td></tr>
+      <tr><td>Full-bodied</td><td>Heavy, rich, fills your whole mouth</td></tr>
+      <tr><td>Finish</td><td>How long the flavor lingers after you swallow</td></tr>
+      <tr><td>Oaky</td><td>Vanilla, toast, or smoky flavors from oak barrel aging</td></tr>
+      <tr><td>Earthy</td><td>Notes of dirt, mushroom, forest floor — complex &amp; positive</td></tr>
+      <tr><td>Corked</td><td>Wine smells like wet cardboard — it's gone bad, send it back</td></tr>
+      <tr><td>Vintage</td><td>The year the grapes were harvested</td></tr>
+      <tr><td>Terroir</td><td>Everything about where the grape grew: soil, climate, geography</td></tr>
+      <tr><td>Brut</td><td>Dry style of sparkling wine / Champagne</td></tr>
+      <tr><td>Sommelier</td><td>Professional trained in wine service</td></tr>
+    </tbody>
+  </table>
+
+  <p class="section-title">Guest-Facing Phrases</p>
+  <div class="card" style="margin-bottom:10px">
+    <div class="card-sub">When they don't know what they want:</div>
+    <p>"Do you usually prefer something <strong style="color:#c9a84c">dry or a little sweet?</strong> Light or bold? Red or white?" — 3 questions gets you there.</p>
+  </div>
+  <div class="card" style="margin-bottom:10px">
+    <div class="card-sub">Recommending for Thai food:</div>
+    <p>"Our dishes have some heat, so I'd suggest something with a touch of sweetness or high acidity — like a <strong style="color:#c9a84c">Riesling or Sauvignon Blanc</strong> — it balances the spice beautifully."</p>
+  </div>
+  <div class="card" style="margin-bottom:10px">
+    <div class="card-sub">If they ask "is it good?":</div>
+    <p>Never say "it's good." Instead: "This one is <strong style="color:#c9a84c">fruit-forward and smooth</strong> — very approachable" or "This has a great acidity that pairs well with seafood."</p>
+  </div>
+  <div class="card">
+    <div class="card-sub">If a wine smells off:</div>
+    <p>Don't ignore it. Tell your manager — a corked wine smells like wet newspaper or musty basement. The guest shouldn't pay for a bad bottle.</p>
+  </div>
+
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>

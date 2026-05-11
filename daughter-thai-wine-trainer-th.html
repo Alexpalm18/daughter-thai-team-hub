@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ความรู้ไวน์ — Daughter Thai</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: #140c08;
+    background-image:
+      radial-gradient(ellipse at 50% 0%, rgba(120, 50, 20, 0.18) 0%, transparent 65%),
+      radial-gradient(ellipse at 80% 80%, rgba(90, 30, 10, 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 20% 60%, rgba(100, 60, 10, 0.10) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    color: #ede5d8;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans Thai', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  .header { background: linear-gradient(160deg, #2a1508 0%, #1a0d06 50%, #120b05 100%); border-bottom: 2px solid #c9a84c; padding: 24px 16px 18px; text-align: center; position: relative; overflow: hidden; }
+  .header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 120%, rgba(201,168,76,0.12) 0%, transparent 60%); pointer-events: none; }
+  .header h1 { color: #c9a84c; font-size: 22px; letter-spacing: 1px; font-weight: 700; text-shadow: 0 0 30px rgba(201,168,76,0.3); }
+  .header p { color: #a08060; font-size: 12px; margin-top: 4px; letter-spacing: 0.5px; }
+  .lang-switch { margin-top: 10px; }
+  .lang-switch a { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; text-decoration: none; border: 1px solid rgba(201,168,76,0.3); color: #a08060; }
+  .lang-switch a.active { background: rgba(201,168,76,0.15); color: #c9a84c; border-color: #c9a84c; }
+  .lang-switch span { color: #503828; margin: 0 4px; }
+  .tabs { display: flex; overflow-x: auto; background: rgba(20, 10, 4, 0.95); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(201,168,76,0.15); position: sticky; top: 0; z-index: 10; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn { flex: 1; min-width: 70px; padding: 12px 6px; background: none; border: none; color: #906848; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; border-bottom: 3px solid transparent; transition: all 0.2s; }
+  .tab-btn.active { color: #c9a84c; border-bottom-color: #c9a84c; background: rgba(201,168,76,0.06); }
+  .tab-btn:hover:not(.active) { color: #b0905a; background: rgba(201,168,76,0.03); }
+  .tab-content { display: none; padding: 16px; max-width: 700px; margin: 0 auto; padding-bottom: 40px; }
+  .tab-content.active { display: block; }
+  .section-title { color: #c9a84c; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 24px 0 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(201,168,76,0.2); }
+  .section-title:first-child { margin-top: 8px; }
+  .card { background: rgba(38, 22, 10, 0.85); border: 1px solid rgba(201,168,76,0.12); border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+  .card-title { color: #c9a84c; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .card p { color: #d4c8b0; font-size: 14px; line-height: 1.7; }
+  .char-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
+  .char-item { background: rgba(20, 12, 5, 0.75); border: 1px solid rgba(201,168,76,0.1); border-radius: 10px; padding: 12px; }
+  .char-item h5 { color: #c9a84c; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .char-item p { font-size: 13px; color: #b0a080; line-height: 1.6; }
+  .sweetness-scale { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to right, #1e1208, #3a2810, #c9a84c); border-radius: 20px; padding: 8px 14px; margin: 8px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .sweetness-scale span { font-size: 11px; font-weight: 600; }
+  .sweetness-scale span:first-child { color: #a09070; }
+  .sweetness-scale span:last-child { color: #1a0800; }
+  .taste-step { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .taste-step:last-child { border-bottom: none; }
+  .step-num { background: linear-gradient(135deg, #c9a84c, #a07828); color: #100800; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; margin-top: 2px; box-shadow: 0 2px 8px rgba(201,168,76,0.3); }
+  .step-content h4 { color: #c9a84c; font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .step-content p { font-size: 13px; color: #c8bfb0; }
+  .old-new { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .world-box { background: #141009; border: 1px solid #2e2010; border-radius: 8px; padding: 12px; }
+  .world-box h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .world-box.old h4 { color: #c9a84c; }
+  .world-box.new h4 { color: #70b8d0; }
+  .world-box ul { list-style: none; }
+  .world-box li { font-size: 12px; color: #c8bfb0; padding: 2px 0 2px 14px; position: relative; line-height: 1.5; }
+  .world-box li::before { content: "·"; position: absolute; left: 0; color: #c9a84c; }
+  .wine-type-card { background: rgba(38, 22, 10, 0.85); border-radius: 12px; padding: 14px; margin-bottom: 12px; border-left: 4px solid; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+  .wine-type-card.red { border-left-color: #8b2020; }
+  .wine-type-card.white { border-left-color: #c9a84c; }
+  .wine-type-card.rose { border-left-color: #c47090; }
+  .wine-type-card.sparkling { border-left-color: #90b0d0; }
+  .wine-type-card.dessert { border-left-color: #a07030; }
+  .wine-type-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .wine-type-card.red h3 { color: #e05050; }
+  .wine-type-card.white h3 { color: #d4c47a; }
+  .wine-type-card.rose h3 { color: #e090b0; }
+  .wine-type-card.sparkling h3 { color: #90c0e0; }
+  .wine-type-card.dessert h3 { color: #c9a84c; }
+  .wine-type-card p { font-size: 13px; color: #c8bfb0; margin-bottom: 6px; }
+  .wine-type-card .grapes { font-size: 12px; color: #a09070; }
+  .wine-type-card .grapes strong { color: #c9a84c; }
+  .grape-card { background: rgba(38, 22, 10, 0.85); border: 1px solid rgba(201,168,76,0.12); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
+  .grape-name { font-size: 15px; font-weight: 700; color: #ede5d8; }
+  .grape-name .aka { font-size: 12px; font-weight: 400; color: #906848; margin-left: 6px; }
+  .grape-type-badge { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; }
+  .badge-red { background: rgba(80, 20, 20, 0.7); color: #e07070; }
+  .badge-white { background: rgba(50, 45, 10, 0.7); color: #d4c47a; }
+  .flavor-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .flavor-tag { background: rgba(20, 12, 5, 0.8); border: 1px solid rgba(201,168,76,0.15); border-radius: 20px; padding: 3px 10px; font-size: 12px; color: #b09870; }
+  .grape-tip { font-size: 13px; color: #c8bfb0; margin-top: 8px; line-height: 1.6; }
+  .champagne-types { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .champ-item { background: #141009; border: 1px solid #2e2010; border-radius: 8px; padding: 8px 10px; }
+  .champ-item .name { font-size: 13px; font-weight: 700; color: #90c0e0; }
+  .champ-item .sugar { font-size: 12px; color: #a09070; margin-top: 2px; }
+  .pairing-list { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .pairing-list li { background: #141009; border: 1px solid #2e2010; border-radius: 16px; padding: 3px 10px; font-size: 12px; color: #b0a080; }
+  .vocab-table { width: 100%; border-collapse: collapse; }
+  .vocab-table th { background: #1f1608; color: #c9a84c; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; padding: 8px 10px; text-align: left; border-bottom: 2px solid #2e2010; }
+  .vocab-table td { padding: 8px 10px; border-bottom: 1px solid #1f1608; font-size: 13px; color: #c8bfb0; vertical-align: top; }
+  .vocab-table td:first-child { font-weight: 700; color: #d4c8a0; white-space: nowrap; }
+  .vocab-table tr:last-child td { border-bottom: none; }
+  .tip-box { background: #1a1a08; border: 1px solid #2e2808; border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+  .tip-box .tip-label { color: #b8c860; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .tip-box p { font-size: 13px; color: #c8bfb0; }
+  .phrase-card { background: rgba(30, 18, 8, 0.9); border: 1px solid rgba(201,168,76,0.15); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+  .phrase-th { font-size: 14px; color: #ede5d8; font-weight: 600; margin-bottom: 4px; }
+  .phrase-en { font-size: 12px; color: #806040; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🍷 ความรู้ไวน์</h1>
+  <p>Daughter Thai Kitchen · คู่มือพนักงาน</p>
+  <div class="lang-switch">
+    <a href="daughter-thai-wine-trainer.html">EN</a>
+    <span>|</span>
+    <a href="daughter-thai-wine-trainer-th.html" class="active">ไทย</a>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('basics')">พื้นฐาน</button>
+  <button class="tab-btn" onclick="showTab('types')">ประเภทไวน์</button>
+  <button class="tab-btn" onclick="showTab('grapes')">องุ่น</button>
+  <button class="tab-btn" onclick="showTab('service')">การบริการ</button>
+</div>
+
+<!-- TAB 1: พื้นฐาน -->
+<div id="tab-basics" class="tab-content active">
+
+  <p class="section-title">ไวน์คืออะไร?</p>
+  <div class="card">
+    <p>ไวน์คือเครื่องดื่มแอลกอฮอล์ที่ทำจาก <strong style="color:#c9a84c">น้ำองุ่นหมัก</strong> หากฉลากเขียนว่า "wine" เฉยๆ แปลว่าทำจากองุ่น ข้อแตกต่างสำคัญ: ไวน์ทำจาก <em>ผลไม้</em> ส่วนเบียร์ทำจาก <em>ธัญพืช</em></p>
+    <p style="margin-top:8px">ตัวเลขบนฉลาก = <strong style="color:#c9a84c">วินเทจ (Vintage)</strong> คือปีที่เก็บเกี่ยวองุ่นและทำไวน์ แต่ละปีจะเก็บเกี่ยวองุ่นได้ครั้งเดียว</p>
+  </div>
+
+  <p class="section-title">5 คุณสมบัติหลักของไวน์</p>
+  <div class="char-grid">
+    <div class="char-item">
+      <h5>🍬 ความหวาน (Sweetness)</h5>
+      <p>มาจากน้ำตาลที่เหลือหลังหมัก (RS) ตั้งแต่แห้งสนิทจนถึงหวานมาก</p>
+    </div>
+    <div class="char-item">
+      <h5>⚡ ความเป็นกรด (Acidity)</h5>
+      <p>กรดธรรมชาติในองุ่น ความเป็นกรดสูง = สดชื่น เปรี้ยว อากาศเย็น = ความเป็นกรดสูง</p>
+    </div>
+    <div class="char-item">
+      <h5>🌿 แทนนิน (Tannin)</h5>
+      <p>มาจากเปลือก เมล็ดองุ่น และถังโอ๊ก ทำให้รู้สึกฝาด แห้งปาก พบในไวน์แดงเป็นหลัก</p>
+    </div>
+    <div class="char-item">
+      <h5>🔥 แอลกอฮอล์ (Alcohol)</h5>
+      <p>เกิดจากยีสต์กินน้ำตาลในองุ่น ทั่วไปอยู่ที่ 10–15% ABV น้ำตาลมาก = แอลกอฮอล์สูง</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:2px">
+    <div class="char-item" style="background:transparent;border:none;padding:0">
+      <h5 style="color:#c9a84c;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">⚖️ บอดี้ (Body)</h5>
+      <p style="font-size:13px;color:#b0a080">ความหนัก/ความอิ่มเต็มของไวน์ในปาก แบ่งเป็น เบา → กลาง → เต็ม แอลกอฮอล์สูงและแทนนินมาก = บอดี้เต็ม</p>
+    </div>
+  </div>
+
+  <p class="section-title">ระดับความหวาน</p>
+  <div class="sweetness-scale">
+    <span>Bone Dry</span>
+    <span>Dry</span>
+    <span>Off-Dry</span>
+    <span>Semi-Sweet</span>
+    <span>Sweet</span>
+  </div>
+  <div class="card" style="margin-top:8px">
+    <p><strong style="color:#c9a84c">"Dry"</strong> = ไม่รู้สึกหวานเลย (น้ำตาลตกค้างต่ำกว่า 0.2%) ไวน์โต๊ะส่วนใหญ่เป็นแบบ Dry ส่วน Riesling อาจ Dry <em>หรือ</em> หวานก็ได้ — ต้องเช็กเสมอ!</p>
+  </div>
+
+  <p class="section-title">วิธีชิมไวน์อย่างมืออาชีพ (ดู · ส่าย · ดม · ชิม)</p>
+  <div class="card">
+    <div class="taste-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>ดู (SEE) 👁️</h4>
+        <p>ยกแก้วส่องแสง สังเกตสี ความใส และความข้น สีเข้มในไวน์แดง = องุ่นสุกมากหรือแช่เปลือกนาน ไวน์ขาวสีทอง = ผ่านถังโอ๊กหรือบ่มนาน</p>
+      </div>
+    </div>
+    <div class="taste-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>ส่าย (SWIRL) 🌀</h4>
+        <p>ส่ายแก้วเบาๆ เพื่อให้ออกซิเจนสัมผัสไวน์ สังเกต "Legs" (ริ้วน้ำ) ที่ไหลลงแก้ว — ริ้วหนาไหลช้า = น้ำตาลหรือแอลกอฮอล์สูง การส่ายยังช่วยปลดปล่อยกลิ่นด้วย</p>
+      </div>
+    </div>
+    <div class="taste-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>ดม (SNIFF) 👃</h4>
+        <p>ก้มจมูกดมในแก้ว สังเกตความเข้มของกลิ่น (จางหรือเข้ม) และประเภทกลิ่น — ผลไม้ ดอกไม้ ดิน เครื่องเทศ โอ๊ก/วานิลลา ถ้ากลิ่นเหมือนกระดาษเปียก = ไวน์เสีย (Corked)</p>
+      </div>
+    </div>
+    <div class="taste-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>ชิม (SIP) 👄</h4>
+        <p>จิบแล้วให้ไวน์เคลือบปาก สังเกตความหวาน ความเป็นกรด (ทำให้น้ำลายออก) แทนนิน (รู้สึกฝาก) บอดี้ และ Finish ยิ่ง Finish ยาวและน่ารื่นรมย์ = ไวน์คุณภาพดี</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title">โลกเก่า vs. โลกใหม่</p>
+  <div class="old-new">
+    <div class="world-box old">
+      <h4>🏰 โลกเก่า (Old World)</h4>
+      <ul>
+        <li>ยุโรป (ฝรั่งเศส อิตาลี สเปน เยอรมนี โปรตุเกส)</li>
+        <li>ระบุ <em>แหล่งผลิต</em> บนฉลาก (Bordeaux, Burgundy, Chianti)</li>
+        <li>บอดี้เบา ความเป็นกรดสูง</li>
+        <li>กลิ่นดิน แร่ธาตุ สมุนไพร</li>
+        <li>ดั้งเดิม มีกฎเข้มงวด</li>
+      </ul>
+    </div>
+    <div class="world-box new">
+      <h4>🌎 โลกใหม่ (New World)</h4>
+      <ul>
+        <li>อเมริกา ออสเตรเลีย NZ อาร์เจนตินา ชิลี แอฟริกาใต้</li>
+        <li>ระบุ <em>พันธุ์องุ่น</em> บนฉลาก (Chardonnay, Cab Sauv)</li>
+        <li>บอดี้เต็ม แอลกอฮอล์สูง</li>
+        <li>รสผลไม้จัด หอมโอ๊ก</li>
+        <li>ทันสมัย สร้างสรรค์</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- TAB 2: ประเภทไวน์ -->
+<div id="tab-types" class="tab-content">
+
+  <p class="section-title">ไวน์แดง (Red Wine)</p>
+  <div class="wine-type-card red">
+    <h3>🍷 ไวน์แดง</h3>
+    <p>ทำจากองุ่นแดง/ม่วง หมักทั้งเปลือกและเมล็ดเพื่อดึงสีและแทนนิน มีแทนนินสูง เหมาะกับอาหารหนักๆ เนื้อสัตว์</p>
+    <p class="grapes"><strong>ลักษณะ:</strong> สีทับทิมถึงม่วงเข้ม · แทนนินสูง · บอดี้กลาง-เต็ม · กลิ่นเบอร์รี่ ดิน เครื่องเทศ</p>
+  </div>
+
+  <p class="section-title">ไวน์ขาว (White Wine)</p>
+  <div class="wine-type-card white">
+    <h3>🥂 ไวน์ขาว</h3>
+    <p>ทำจากองุ่นขาวหรือเขียว หมักโดยไม่มีเปลือก จึงไม่มีสีและแทนนินต่ำ ดื่มเย็นสดชื่น</p>
+    <p class="grapes"><strong>ลักษณะ:</strong> สีเหลืองฟางถึงทอง · แทนนินต่ำ · ความเป็นกรดสูง · กลิ่นส้ม ดอกไม้ แร่ธาตุ</p>
+  </div>
+
+  <p class="section-title">ไวน์โรเซ่ (Rosé Wine)</p>
+  <div class="wine-type-card rose">
+    <h3>🌸 ไวน์โรเซ่</h3>
+    <p>ทำจากองุ่นแดงแต่แช่เปลือกเพียงช่วงสั้นๆ ทำให้ได้สีชมพู มักมีรสสดชื่น ดื่มง่าย เหมาะกับอาหารเบา</p>
+    <p class="grapes"><strong>ลักษณะ:</strong> สีชมพูอ่อนถึงแซลมอน · แทนนินต่ำ · ความเป็นกรดปานกลาง · กลิ่นสตรอว์เบอร์รี่ แตงโม</p>
+  </div>
+
+  <p class="section-title">Sparkling Wine</p>
+  <div class="wine-type-card sparkling">
+    <h3>✨ Sparkling Wine</h3>
+    <p>ไวน์ที่มีฟอง CO₂ จากกระบวนการหมักครั้งที่สอง ทุกตัวคือ "sparkling wine" — ชื่อเรียกต่างกันแค่ตาม <em>แหล่งผลิต</em> เท่านั้น</p>
+    <div style="margin:10px 0 6px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:rgba(20,14,30,0.6);border:1px solid rgba(144,176,208,0.2);border-radius:8px;padding:10px">
+        <div style="color:#90c0e0;font-weight:700;font-size:13px">🥂 Champagne</div>
+        <div style="font-size:12px;color:#b0b8c8;margin-top:4px;line-height:1.6">มาจาก <strong style="color:#ede5d8">แคว้น Champagne ฝรั่งเศส เท่านั้น</strong> ทำจาก Pinot Noir, Chardonnay และ Pinot Meunier ถือเป็นมาตรฐานสูงสุด</div>
+      </div>
+      <div style="background:rgba(20,14,30,0.6);border:1px solid rgba(144,176,208,0.2);border-radius:8px;padding:10px">
+        <div style="color:#90c0e0;font-weight:700;font-size:13px">🇮🇹 Prosecco</div>
+        <div style="font-size:12px;color:#b0b8c8;margin-top:4px;line-height:1.6">มาจาก <strong style="color:#ede5d8">แคว้น Veneto อิตาลี</strong> ทำจากองุ่น Glera รสผลไม้สด เบากว่า ราคาเข้าถึงได้ง่าย นิยมใช้ทำ Aperol Spritz</div>
+      </div>
+      <div style="background:rgba(20,14,30,0.6);border:1px solid rgba(144,176,208,0.2);border-radius:8px;padding:10px">
+        <div style="color:#90c0e0;font-weight:700;font-size:13px">🇪🇸 Cava</div>
+        <div style="font-size:12px;color:#b0b8c8;margin-top:4px;line-height:1.6">มาจาก <strong style="color:#ede5d8">สเปน</strong> (ส่วนใหญ่แคว้น Catalonia) ผลิตด้วยวิธีเดียวกับ Champagne แต่ใช้องุ่นท้องถิ่น รสแห้ง หอมขนมปัง คุ้มค่ามาก</div>
+      </div>
+      <div style="background:rgba(20,14,30,0.6);border:1px solid rgba(144,176,208,0.2);border-radius:8px;padding:10px">
+        <div style="color:#90c0e0;font-weight:700;font-size:13px">🌍 Sparkling Wine</div>
+        <div style="font-size:12px;color:#b0b8c8;margin-top:4px;line-height:1.6">ทุกตัวที่ไม่ได้มาจากสามแหล่งข้างต้น เช่น USA, ออสเตรเลีย, NZ ฯลฯ เรียกรวมว่า <strong style="color:#ede5d8">Sparkling Wine</strong></div>
+      </div>
+    </div>
+    <p class="grapes" style="margin-top:6px"><strong>เสิร์ฟ:</strong> เย็นจัด 6–8°C · ใส่ถังน้ำแข็ง · ฟองละเอียด รสสดชื่น</p>
+  </div>
+
+  <p class="section-title">ระดับความหวานของแชมเปญ</p>
+  <div class="champagne-types">
+    <div class="champ-item"><div class="name">Brut Nature / Zero</div><div class="sugar">น้ำตาล 0–3 g/L (แห้งที่สุด)</div></div>
+    <div class="champ-item"><div class="name">Extra Brut</div><div class="sugar">น้ำตาล 0–6 g/L</div></div>
+    <div class="champ-item"><div class="name">Brut</div><div class="sugar">น้ำตาล &lt;12 g/L (ยอดนิยม)</div></div>
+    <div class="champ-item"><div class="name">Extra Dry</div><div class="sugar">น้ำตาล 12–17 g/L (กึ่งหวาน)</div></div>
+    <div class="champ-item"><div class="name">Sec</div><div class="sugar">น้ำตาล 17–32 g/L</div></div>
+    <div class="champ-item"><div class="name">Demi-Sec / Doux</div><div class="sugar">น้ำตาล 32–50 g/L (หวาน)</div></div>
+  </div>
+
+  <p class="section-title">ไวน์หวาน (Dessert & Fortified)</p>
+  <div class="wine-type-card dessert">
+    <h3>🍯 ไวน์หวาน / ไวน์เข้มข้น</h3>
+    <p>ไวน์หวานเกิดจากกระบวนการหยุดหมักกลางคัน หรือทำให้องุ่นแห้งเพื่อเพิ่มความเข้มข้น ส่วนไวน์เข้มข้น (Fortified) เช่น Port, Sherry มีการเติมบรั่นดี</p>
+    <p class="grapes"><strong>ตัวอย่าง:</strong> Sauternes, Ice Wine, Port, Sherry, Madeira · เสิร์ฟเย็นเล็กน้อยในปริมาณน้อย</p>
+  </div>
+
+</div>
+
+<!-- TAB 3: องุ่น -->
+<div id="tab-grapes" class="tab-content">
+
+  <p class="section-title">องุ่นแดงหลัก</p>
+
+  <div class="grape-card">
+    <div class="grape-name">Cabernet Sauvignon <span class="aka">แคบ ซอวิงยอน</span></div>
+    <span class="grape-type-badge badge-red">🍷 แดง</span>
+    <div class="flavor-bar">
+      <span class="flavor-tag">แบล็กเคอแรนต์</span>
+      <span class="flavor-tag">ลูกพลัม</span>
+      <span class="flavor-tag">ซีดาร์</span>
+      <span class="flavor-tag">โอ๊ก</span>
+      <span class="flavor-tag">ยาสูบ</span>
+    </div>
+    <p class="grape-tip">องุ่นแดงที่ปลูกมากที่สุดในโลก บอดี้เต็ม แทนนินสูง บ่มได้นาน แหล่งหลัก: Bordeaux (ฝรั่งเศส), Napa Valley (USA), Coonawarra (ออสเตรเลีย)</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Merlot <span class="aka">เมอร์โล</span></div>
+    <span class="grape-type-badge badge-red">🍷 แดง</span>
+    <div class="flavor-bar">
+      <span class="flavor-tag">ลูกพลัม</span>
+      <span class="flavor-tag">เชอร์รี่ดำ</span>
+      <span class="flavor-tag">ช็อกโกแลต</span>
+      <span class="flavor-tag">วานิลลา</span>
+    </div>
+    <p class="grape-tip">นุ่มกว่า Cab Sauv แทนนินปานกลาง บอดี้กลาง ดื่มง่าย เหมาะสำหรับผู้เริ่มดื่มไวน์ มักผสมกับ Cab Sauv ใน Bordeaux Blend</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Pinot Noir <span class="aka">ปิโนต์ นัวร์</span></div>
+    <span class="grape-type-badge badge-red">🍷 แดง</span>
+    <div class="flavor-bar">
+      <span class="flavor-tag">เชอร์รี่</span>
+      <span class="flavor-tag">ราสพ์เบอร์รี่</span>
+      <span class="flavor-tag">เห็ด</span>
+      <span class="flavor-tag">ดิน</span>
+      <span class="flavor-tag">ดอกไม้</span>
+    </div>
+    <p class="grape-tip">บอดี้เบา แทนนินต่ำ ปลูกยาก ราคาสูง แหล่งที่ดีที่สุด: Burgundy (ฝรั่งเศส), Willamette Valley (Oregon), Central Otago (NZ)</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Syrah / Shiraz <span class="aka">ซีราห์ / ชีราซ</span></div>
+    <span class="grape-type-badge badge-red">🍷 แดง</span>
+    <div class="flavor-bar">
+      <span class="flavor-tag">แบล็กเบอร์รี่</span>
+      <span class="flavor-tag">พริกไทยดำ</span>
+      <span class="flavor-tag">เนื้อรมควัน</span>
+      <span class="flavor-tag">น้ำมันมะกอก</span>
+    </div>
+    <p class="grape-tip">Syrah = สไตล์ฝรั่งเศส (Rhône) — เข้มข้น ซับซ้อน · Shiraz = สไตล์ออสเตรเลีย — ผลไม้จัด กลิ่นหอมมากกว่า</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Malbec <span class="aka">มัลเบก</span></div>
+    <span class="grape-type-badge badge-red">🍷 แดง</span>
+    <div class="flavor-bar">
+      <span class="flavor-tag">ลูกพลัมดำ</span>
+      <span class="flavor-tag">บลูเบอร์รี่</span>
+      <span class="flavor-tag">ช็อกโกแลต</span>
+      <span class="flavor-tag">กาแฟ</span>
+    </div>
+    <p class="grape-tip">ต้นกำเนิดฝรั่งเศส แต่ดังระดับโลกในอาร์เจนตินา (Mendoza) สีเข้มมาก บอดี้เต็ม แทนนินนุ่ม</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Sangiovese <span class="aka">ซันโจเวเซ่</span></div>
+    <span class="grape-type-badge badge-red">🍷 แดง</span>
+    <div class="flavor-bar">
+      <span class="flavor-tag">เชอร์รี่</span>
+      <span class="flavor-tag">มะเขือเทศ</span>
+      <span class="flavor-tag">สมุนไพร</span>
+      <span class="flavor-tag">ดิน</span>
+    </div>
+    <p class="grape-tip">องุ่นหลักของอิตาลี ใช้ทำ Chianti และ Brunello di Montalcino ความเป็นกรดสูง แทนนินแน่น เข้ากับอาหารอิตาเลียน</p>
+  </div>
+
+  <p class="section-title">องุ่นขาวหลัก</p>
+
+  <div class="grape-card">
+    <div class="grape-name">Chardonnay <span class="aka">ชาร์ดอนเนย์</span></div>
+    <span class="grape-type-badge badge-white">🥂 ขาว</span>
+    <div class="flavor-bar">
+      <span class="flavor-tag">แอปเปิล</span>
+      <span class="flavor-tag">เลมอน</span>
+      <span class="flavor-tag">วานิลลา</span>
+      <span class="flavor-tag">เนย</span>
+      <span class="flavor-tag">โอ๊ก</span>
+    </div>
+    <p class="grape-tip">ปรับตัวได้ทุกสภาพอากาศ ถ้าผ่านโอ๊ก = เนย วานิลลา เครมี่ ถ้าไม่ผ่านโอ๊ก = กรด กลิ่นผลไม้สด แหล่งดัง: Burgundy, Napa, Chablis</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Sauvignon Blanc <span class="aka">ซอวิงยอน บลอง</span></div>
+    <span class="grape-type-badge badge-white">🥂 ขาว</span>
+    <div class="flavor-bar">
+      <span class="flavor-tag">มะนาว</span>
+      <span class="flavor-tag">เกรฟฟรุต</span>
+      <span class="flavor-tag">หญ้า</span>
+      <span class="flavor-tag">พาสชั่นฟรุต</span>
+    </div>
+    <p class="grape-tip">ความเป็นกรดสูง กลิ่นจัดชัดเจน Marlborough (NZ) = กลิ่นพาสชั่นฟรุต สดจัด Loire (ฝรั่งเศส) = แร่ธาตุ หญ้า ซับซ้อนกว่า</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Pinot Grigio / Pinot Gris <span class="aka">ปิโนต์ กรีโจ</span></div>
+    <span class="grape-type-badge badge-white">🥂 ขาว</span>
+    <div class="flavor-bar">
+      <span class="flavor-tag">ลูกแพร์</span>
+      <span class="flavor-tag">แอปเปิล</span>
+      <span class="flavor-tag">มะนาว</span>
+      <span class="flavor-tag">แร่ธาตุ</span>
+    </div>
+    <p class="grape-tip">อิตาลีสไตล์ (Pinot Grigio) = เบา กรอบ สดชื่น · อัลเซซ/ออสเตรเลียสไตล์ (Pinot Gris) = เต็มกว่า อาจมีความหวานเล็กน้อย</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Riesling <span class="aka">รีสลิง</span></div>
+    <span class="grape-type-badge badge-white">🥂 ขาว</span>
+    <div class="flavor-bar">
+      <span class="flavor-tag">มะนาว</span>
+      <span class="flavor-tag">แอปริคอต</span>
+      <span class="flavor-tag">น้ำผึ้ง</span>
+      <span class="flavor-tag">น้ำมันก๊าด</span>
+    </div>
+    <p class="grape-tip">มีทั้งแบบแห้งสนิทและหวานมาก ต้องเช็กฉลาก ความเป็นกรดสูงมาก เก็บบ่มได้นาน กลิ่นน้ำมันก๊าดในไวน์เก่าเป็นเรื่องปกติและถือว่าดี</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Moscato / Muscat <span class="aka">มัสคาโต</span></div>
+    <span class="grape-type-badge badge-white">🥂 ขาว</span>
+    <div class="flavor-bar">
+      <span class="flavor-tag">ลิ้นจี่</span>
+      <span class="flavor-tag">ดอกส้ม</span>
+      <span class="flavor-tag">พีช</span>
+      <span class="flavor-tag">น้ำผึ้ง</span>
+    </div>
+    <p class="grape-tip">หอมหวานกลิ่นดอกไม้ มักมีฟองเล็กน้อย (Moscato d'Asti) แอลกอฮอล์ต่ำ 5–7% เหมาะกับผู้ที่ชอบรสหวาน ดื่มง่าย</p>
+  </div>
+
+  <div class="grape-card">
+    <div class="grape-name">Gewürztraminer <span class="aka">เกเวิร์ซทรามีเนอร์</span></div>
+    <span class="grape-type-badge badge-white">🥂 ขาว</span>
+    <div class="flavor-bar">
+      <span class="flavor-tag">กุหลาบ</span>
+      <span class="flavor-tag">ลิ้นจี่</span>
+      <span class="flavor-tag">ขิง</span>
+      <span class="flavor-tag">เครื่องเทศ</span>
+    </div>
+    <p class="grape-tip">กลิ่นหอมจัดมาก บอดี้เต็ม ความเป็นกรดต่ำ มาจาก Alsace (ฝรั่งเศส) และเยอรมนี เข้ากันได้ดีกับอาหารรสเผ็ดและอาหารเอเชีย</p>
+  </div>
+
+</div>
+
+<!-- TAB 4: การบริการ -->
+<div id="tab-service" class="tab-content">
+
+  <p class="section-title">อุณหภูมิเสิร์ฟที่เหมาะสม</p>
+  <div class="card">
+    <table class="vocab-table">
+      <tr><th>ประเภท</th><th>อุณหภูมิ</th><th>เคล็ดลับ</th></tr>
+      <tr><td>Champagne / Sparkling Wine</td><td>6–8°C</td><td>เย็นจัด ใส่ถังน้ำแข็ง</td></tr>
+      <tr><td>ไวน์ขาวเบา / โรเซ่</td><td>8–10°C</td><td>แช่ตู้เย็น 2 ชม.</td></tr>
+      <tr><td>ไวน์ขาวเต็ม (โอ๊ก)</td><td>10–13°C</td><td>เย็นกว่าอุณหภูมิห้องเล็กน้อย</td></tr>
+      <tr><td>ไวน์แดงเบา (Pinot Noir)</td><td>13–16°C</td><td>แช่ตู้เย็น 30 นาที</td></tr>
+      <tr><td>ไวน์แดงเต็ม (Cab Sauv)</td><td>17–20°C</td><td>อุณหภูมิห้องที่มีแอร์</td></tr>
+    </table>
+    <p style="margin-top:8px;font-size:12px;color:#806040">⚠️ ห้ามเสิร์ฟไวน์แดงในอุณหภูมิห้องร้อนๆ — ทำให้แอลกอฮอล์โดดเด่นและขาดความสมดุล</p>
+  </div>
+
+  <p class="section-title">จับคู่ไวน์กับอาหารไทย</p>
+  <div class="card">
+    <table class="vocab-table">
+      <tr><th>เมนู</th><th>ไวน์แนะนำ</th></tr>
+      <tr><td>ต้มยำ / แกงเขียวหวาน</td><td>Riesling Off-dry, Gewürztraminer — ความหวานช่วยดับเผ็ด</td></tr>
+      <tr><td>ผัดไทย / มะม่วงข้าวเหนียว</td><td>Moscato, Pinot Grigio — เบาสดชื่น ไม่ข่มรสอาหาร</td></tr>
+      <tr><td>เนื้อย่าง / หมูสะเต๊ะ</td><td>Malbec, Shiraz — บอดี้เต็ม เข้ากับเนื้อย่าง</td></tr>
+      <tr><td>ปลาทอด / อาหารทะเล</td><td>Sauvignon Blanc, Pinot Grigio — กรดสูง ตัดความมัน</td></tr>
+      <tr><td>ลาบ / ยำ (รสเปรี้ยวเผ็ด)</td><td>Rosé, Pinot Noir เบา — ไม่ข่มรสชาติจัด</td></tr>
+      <tr><td>แกงมัสมั่น</td><td>Merlot, Grenache — นุ่ม เข้ากับเครื่องเทศ</td></tr>
+    </table>
+  </div>
+
+  <p class="section-title">หลักการจับคู่อาหารและไวน์</p>
+  <div class="tip-box">
+    <div class="tip-label">💡 กฎง่ายๆ</div>
+    <p>อาหารทะเล = ไวน์ขาว · เนื้อสัตว์ = ไวน์แดง · รสเผ็ด = ไวน์หวานหรือกลิ่นหอม · รสเปรี้ยว = ไวน์กรดสูง · ของหวาน = ไวน์หวานกว่าอาหาร</p>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">🌏 อาหารไทยกับไวน์</div>
+    <p>อาหารไทยรสจัด (เผ็ด เปรี้ยว เค็ม หวาน) เข้ากันได้ดีกับไวน์ที่มีความหอม กรด หรือหวานเล็กน้อย หลีกเลี่ยงไวน์แทนนินสูง เพราะจะยิ่งเพิ่มความเผ็ด</p>
+  </div>
+
+  <p class="section-title">คำศัพท์ไวน์ที่ต้องรู้</p>
+  <div class="card">
+    <table class="vocab-table">
+      <tr><th>คำศัพท์</th><th>ความหมาย</th></tr>
+      <tr><td>Vintage</td><td>ปีที่เก็บเกี่ยวองุ่น</td></tr>
+      <tr><td>Varietal</td><td>ไวน์ที่ระบุพันธุ์องุ่นบนฉลาก</td></tr>
+      <tr><td>Blend</td><td>ไวน์ที่ผสมองุ่นหลายพันธุ์</td></tr>
+      <tr><td>Oaked / Unoaked</td><td>บ่มในถังโอ๊ก / ไม่บ่มในโอ๊ก</td></tr>
+      <tr><td>Legs / Tears</td><td>ริ้วน้ำที่ไหลลงแก้วหลังส่าย</td></tr>
+      <tr><td>Finish / Length</td><td>รสที่ค้างในปากหลังกลืน</td></tr>
+      <tr><td>Terroir</td><td>อิทธิพลของดิน อากาศ ภูมิประเทศต่อรสไวน์</td></tr>
+      <tr><td>Corked</td><td>ไวน์เสียจากเชื้อราในจุก กลิ่นกระดาษเปียก</td></tr>
+      <tr><td>Decant</td><td>เทไวน์ใส่กระบอกเพื่อเปิดกลิ่น/แยกตะกอน</td></tr>
+      <tr><td>House Wine</td><td>ไวน์แนะนำของร้าน</td></tr>
+    </table>
+  </div>
+
+  <p class="section-title">ประโยคแนะนำลูกค้า (ภาษาไทย)</p>
+
+  <div class="phrase-card">
+    <div class="phrase-th">ลูกค้าชอบไวน์รสอย่างไรครับ/ค่ะ? หวาน แห้ง หรือชอบไวน์ขาวหรือแดง?</div>
+    <div class="phrase-en">Do you prefer sweet, dry, red, or white wine?</div>
+  </div>
+
+  <div class="phrase-card">
+    <div class="phrase-th">ถ้าชอบรสผลไม้สด สดชื่น แนะนำ Sauvignon Blanc ครับ/ค่ะ เข้ากับอาหารทะเลและยำของเราได้ดีมาก</div>
+    <div class="phrase-en">If you like fresh, crisp fruit, I'd recommend our Sauvignon Blanc — it pairs beautifully with our seafood and salads.</div>
+  </div>
+
+  <div class="phrase-card">
+    <div class="phrase-th">ไวน์แดงตัวนี้บอดี้เต็ม มีกลิ่นผลไม้และเครื่องเทศ เข้ากับเนื้อย่างและแกงมัสมั่นของเราได้ดีครับ/ค่ะ</div>
+    <div class="phrase-en">This red has a full body with fruit and spice notes — it pairs wonderfully with our grilled meats and Massaman curry.</div>
+  </div>
+
+  <div class="phrase-card">
+    <div class="phrase-th">ถ้าทานอาหารเผ็ด แนะนำ Riesling ครับ/ค่ะ ความหวานเล็กน้อยช่วยลดความเผ็ดได้ดี</div>
+    <div class="phrase-en">For spicy dishes, I'd suggest our Riesling — the slight sweetness balances the heat really well.</div>
+  </div>
+
+  <div class="phrase-card">
+    <div class="phrase-th">วันนี้มีไวน์แก้วแนะนำ (House Wine) คือ [ชื่อ] ครับ/ค่ะ รสกลางๆ ดื่มได้กับทุกเมนู</div>
+    <div class="phrase-en">Our house wine today is [name] — it's a versatile choice that pairs well with most of our menu.</div>
+  </div>
+
+  <div class="phrase-card">
+    <div class="phrase-th">ขอแนะนำให้ชิมก่อนได้เลยครับ/ค่ะ ก่อนสั่งทั้งแก้ว</div>
+    <div class="phrase-en">I'd be happy to let you try a small taste before committing to a full glass.</div>
+  </div>
+
+</div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+</script>
+</body>
+</html>
