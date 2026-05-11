@@ -308,6 +308,68 @@
     .impact-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); }
     .impact-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
 
+    /* ── Special occasion banner ── */
+    .occasion-banner {
+      background: linear-gradient(135deg, #3a1a6e 0%, #6b3fa0 100%);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+    .occasion-banner h3 { font-size: 1rem; margin-bottom: 8px; }
+    .occasion-banner p  { font-size: 13px; opacity: 0.85; margin: 0; }
+
+    .occasion-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 14px 0;
+    }
+    @media (max-width: 500px) { .occasion-grid { grid-template-columns: 1fr; } }
+    .occasion-item {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+    }
+    .occasion-item-label {
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 1px; text-transform: uppercase;
+      opacity: 0.65; margin-bottom: 4px;
+    }
+
+    /* ── Fee table ── */
+    .fee-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .fee-header {
+      background: var(--brand-light);
+      padding: 13px 20px;
+      display: flex; align-items: center; gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .fee-icon  { font-size: 22px; flex-shrink: 0; }
+    .fee-title { font-size: 15px; font-weight: 700; color: var(--brand-dark); }
+    .fee-body  { padding: 16px 20px; }
+    .fee-body p { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
+    .fee-rows  { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 10px 0; }
+    .fee-row   {
+      display: flex; align-items: center;
+      padding: 10px 14px; gap: 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .fee-row:last-child { border-bottom: none; }
+    .fee-row-label { flex: 1; color: var(--text); font-weight: 600; }
+    .fee-row-value { color: var(--brand-dark); font-weight: 800; font-size: 14px; }
+    .fee-row-note  { font-size: 11px; color: var(--muted); flex-basis: 100%; padding-top: 2px; }
+    .fee-row.alt   { background: #fdfaf7; }
+
     /* ── Footer ── */
     footer {
       text-align: center; padding: 24px; font-size: 12px;
@@ -599,6 +661,161 @@
           <div class="callout-body">
             <strong>Why Check-Backs Matter</strong>
             Catching issues early prevents bad experiences, negative reviews, and uncomfortable situations at the end of service.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- SPECIAL OCCASIONS                        -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section-label">Special Occasions</div>
+
+    <div class="occasion-banner">
+      <h3>🎉 Make Every Celebration Feel Personal</h3>
+      <p>Always check your reservation notes for special occasion flags. If a guest mentions a birthday, anniversary, graduation, or any celebration — at any point during the meal — acknowledge it immediately and make them feel seen. A small gesture goes a long way.</p>
+      <div class="occasion-grid">
+        <div class="occasion-item">
+          <div class="occasion-item-label">From Reservation</div>
+          Check OpenTable / reservation notes before the table is seated. Greet them with the occasion in mind from the very start.
+        </div>
+        <div class="occasion-item">
+          <div class="occasion-item-label">Guest Tells You</div>
+          The moment they mention it, stop and acknowledge it. Don't wait until the end of the meal — the earlier the better.
+        </div>
+      </div>
+    </div>
+
+    <!-- Acknowledging the Occasion -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number" style="background: #6b3fa0;">🎂</div>
+        <div class="step-title">Acknowledge the Occasion Warmly</div>
+      </div>
+      <div class="step-body">
+        <p>As soon as you know about a special occasion, say something. Don't let the moment pass.</p>
+        <div class="script">
+          <div class="script-label">Birthday</div>
+          "Happy Birthday! We're so glad you're celebrating with us tonight — we're going to make sure it's a great one."
+        </div>
+        <div class="script">
+          <div class="script-label">Anniversary</div>
+          "Happy Anniversary! Congratulations — thank you so much for choosing Daughter Thai to celebrate."
+        </div>
+        <div class="script">
+          <div class="script-label">Any Occasion</div>
+          "Congratulations on your [graduation / promotion / etc.]! That's such exciting news — we hope tonight is a wonderful celebration."
+        </div>
+        <div class="callout tip">
+          <div class="callout-icon">💡</div>
+          <div class="callout-body">
+            <strong>Keep Acknowledging Throughout the Meal</strong>
+            You don't have to do it every visit, but check in with a warm mention during the meal — a small comment when dropping off food, or a "hope the celebration is going well!" mid-check-back goes a long way. Even if the birthday song never happens, they'll still feel taken care of.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Birthday Song -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number" style="background: #6b3fa0;">🎵</div>
+        <div class="step-title">Birthday Song — How It Works</div>
+      </div>
+      <div class="step-body">
+        <p>We sing happy birthday with the band — but <strong>only when the table orders dessert from us.</strong> Guests often assume the singing and a free dessert come automatically. They don't. It's important to set this expectation early so no one is disappointed at the end of the meal.</p>
+
+        <div class="callout important">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-body">
+            <strong>Tell Them Early — Don't Wait Until Dessert</strong>
+            Bring it up naturally during the meal, well before the dessert conversation. This avoids an awkward moment at the end and actually builds excitement.
+          </div>
+        </div>
+
+        <div class="script">
+          <div class="script-label">What to Say (Mid-Meal)</div>
+          "By the way — just so you know, whenever you order dessert with us, we do a birthday singing with our band. Just something fun if you'd like to do that later!"
+        </div>
+
+        <div class="branch-grid">
+          <div class="branch yes">
+            <div class="branch-tag">✓ They Order Dessert</div>
+            <p>Coordinate with the band. Bring out the dessert with the singing. Make it a moment they'll remember.</p>
+          </div>
+          <div class="branch no">
+            <div class="branch-tag">↩ They Skip Dessert</div>
+            <p>No singing — and that's okay. The acknowledgment and warmth throughout the meal already made them feel special. No guest should leave feeling like nothing happened.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- FEES & POLICIES                          -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section-label">Fees &amp; Policies Servers Must Know</div>
+
+    <!-- Carry-In Dessert Fee -->
+    <div class="fee-card">
+      <div class="fee-header">
+        <div class="fee-icon">🎂</div>
+        <div class="fee-title">Carry-In Dessert Fee</div>
+      </div>
+      <div class="fee-body">
+        <p>Guests who bring their own dessert (cake, pastries, etc.) are charged a carry-in dessert fee. <strong>Do not call it a "cake cutting fee"</strong> — guests have argued in the past that since it's not a cake, they shouldn't pay. Always use the term <em>carry-in dessert fee.</em></p>
+        <div class="fee-rows">
+          <div class="fee-row">
+            <div class="fee-row-label">Carry-in dessert fee</div>
+            <div class="fee-row-value">$2.50 / person</div>
+          </div>
+          <div class="fee-row alt">
+            <div class="fee-row-label">Waived if…</div>
+            <div class="fee-row-value" style="color: var(--green);">Any dessert ordered from us</div>
+          </div>
+        </div>
+        <div class="callout tip">
+          <div class="callout-icon">💡</div>
+          <div class="callout-body">
+            <strong>Use This as a Selling Moment</strong>
+            If a guest brings their own dessert, let them know they can skip the fee entirely by adding one of our desserts to the order. It's a natural upsell and saves them money.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Corkage Fee -->
+    <div class="fee-card">
+      <div class="fee-header">
+        <div class="fee-icon">🍾</div>
+        <div class="fee-title">Corkage Fee — Guest-Brought Wine &amp; Champagne</div>
+      </div>
+      <div class="fee-body">
+        <p>Guests may bring their own wine or champagne, but there are strict rules around bottle size, pricing, and who opens the bottle. Know these cold.</p>
+        <div class="fee-rows">
+          <div class="fee-row">
+            <div class="fee-row-label">1st bottle</div>
+            <div class="fee-row-value">$35</div>
+          </div>
+          <div class="fee-row alt">
+            <div class="fee-row-label">2nd bottle</div>
+            <div class="fee-row-value">$35</div>
+          </div>
+          <div class="fee-row">
+            <div class="fee-row-label">3rd bottle</div>
+            <div class="fee-row-value">$45</div>
+          </div>
+          <div class="fee-row alt">
+            <div class="fee-row-label">Max bottle size</div>
+            <div class="fee-row-value">750ml only</div>
+          </div>
+        </div>
+        <div class="callout important">
+          <div class="callout-icon">🚫</div>
+          <div class="callout-body">
+            <strong>Guests Cannot Open Their Own Champagne — Ever</strong>
+            This is a legal and safety requirement, not a preference. Even if a guest claims they are experienced or professional, we cannot allow it. If there is an accident, the restaurant is liable. A server or manager must always open the bottle.<br><br>
+            <em>"I totally understand — but for legal and safety reasons, we're required to open all bottles at the table ourselves. Let me take care of that for you!"</em>
           </div>
         </div>
       </div>
